@@ -1,0 +1,117 @@
+/* The whole picture: a roadmap printed as A5 pages.
+   Mint = found, start here. Pink = a trap, read before you use. Violet = do it yourself.
+   Mono type = labels a machine would print. */
+@font-face{font-family:"Plex Sans";font-weight:300;src:url("fonts/IBMPlexSans-Light.ttf")}
+@font-face{font-family:"Plex Sans";font-weight:400;src:url("fonts/IBMPlexSans-Regular.ttf")}
+@font-face{font-family:"Plex Sans";font-weight:500;src:url("fonts/IBMPlexSans-Medium.ttf")}
+@font-face{font-family:"Plex Sans";font-weight:600;src:url("fonts/IBMPlexSans-SemiBold.ttf")}
+@font-face{font-family:"Plex Mono";font-weight:400;src:url("fonts/IBMPlexMono-Regular.ttf")}
+@font-face{font-family:"Plex Mono";font-weight:500;src:url("fonts/IBMPlexMono-Medium.ttf")}
+:root{--ink:#0d021b;--panel:#170a2c;--rule:#3a2a5c;--paper:#fdfdfb;--dim:#a39bbd;--mint:#02feb9;--pink:#ff00aa;--violet:#9d96ff}
+@page{size:148mm 210mm;margin:0}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;background:var(--ink);color:var(--paper);font:400 9pt/1.42 "Plex Sans",sans-serif}
+a{color:inherit;text-decoration:none}
+p{margin:0}
+.mono{font-family:"Plex Mono",monospace;letter-spacing:.04em}
+
+.page{width:148mm;height:210mm;background:var(--ink);break-after:page;overflow:hidden;display:flex;flex-direction:column;padding:7mm 11mm 0}
+.content{flex:1;min-height:0;overflow:hidden;position:relative}
+
+/* top bar: back to the map, where this page sits among the chapters, page number */
+.bar{display:flex;align-items:center;gap:4mm;height:7mm;font-size:6pt;color:var(--dim);flex:none}
+.bar .back{color:var(--mint)}
+.ticks{display:flex;gap:1.1mm;flex:1}
+.ticks a{display:block;height:1.5mm;flex:1;border:.25mm solid var(--rule)}
+.ticks a.on{background:var(--mint);border-color:var(--mint)}
+.foot{flex:none;height:10mm;display:flex;justify-content:space-between;align-items:center;font-size:5.6pt;color:#6f6790;border-top:.2mm solid var(--rule);margin-top:2mm}
+
+/* chapter head */
+.eyebrow{font-size:6.4pt;color:var(--dim);margin-top:3.5mm}
+.eyebrow b{color:var(--mint);font-weight:500;margin-right:2mm}
+h1{font:300 21pt/1.08 "Plex Sans";margin:1.5mm 0 0;letter-spacing:-.01em}
+.io{display:grid;grid-template-columns:1fr 6mm 1fr;align-items:start;margin-top:3mm;padding:1.8mm 0;border-top:.2mm solid var(--rule);border-bottom:.2mm solid var(--rule);font-size:8.4pt;line-height:1.3}
+.io .lab{display:block;font-size:5.6pt;color:var(--dim);margin-bottom:.6mm}
+.io .ar{color:var(--mint);font-size:10pt;text-align:center;padding-top:2.2mm}
+.io .o{color:var(--mint)}
+.why{margin-top:3mm;font-size:9.3pt;line-height:1.4}
+h2{font:500 6.4pt/1 "Plex Mono";letter-spacing:.06em;color:var(--dim);text-transform:uppercase;margin:4.2mm 0 0}
+.p{margin-top:2.6mm}
+
+/* a resource: the whole row is the link */
+.res{display:grid;grid-template-columns:14.5mm 1fr 4mm;column-gap:2.2mm;padding:1.7mm 0 1.6mm;border-top:.2mm solid var(--rule);position:relative;break-inside:avoid}
+.reslist{margin-top:3.4mm}
+.reslist .res:last-child{border-bottom:.2mm solid var(--rule)}
+.res.start{border:.3mm solid var(--mint);padding:1.9mm 2mm 1.8mm;margin:5.4mm 0 1mm}
+.res.start + .res{border-top:0}
+.tag{position:absolute;left:-.3mm;top:-3.5mm;height:3.5mm;padding:0 1.4mm;font:500 5.6pt/3.5mm "Plex Mono";letter-spacing:.04em;background:var(--mint);color:var(--ink);white-space:nowrap}
+.cost{font:500 5.4pt/1 "Plex Mono";letter-spacing:.05em;align-self:start;margin-top:.9mm;padding:1mm 0;text-align:center;border:.25mm solid currentColor}
+.cost.free{color:var(--mint)} .cost.freemium{color:var(--violet)} .cost.audit{color:var(--pink)}
+.res .t{font-weight:500;font-size:10pt;line-height:1.22;display:block}
+.res .prov{display:block;font:400 5.6pt/1.35 "Plex Mono";letter-spacing:.04em;color:var(--dim);text-transform:uppercase;margin-top:.7mm}
+.res .note{display:block;font-size:8.5pt;line-height:1.36;color:#d9d4ea;margin-top:.6mm}
+.res .go{color:var(--mint);font-size:8pt;text-align:right;align-self:start}
+.res .in{color:var(--mint);border-bottom:.2mm solid var(--mint);white-space:nowrap}
+.also{margin-top:2.4mm;font-size:8.2pt;color:var(--dim)}
+.also .mono{font-size:5.6pt;margin-right:1.5mm}
+.also a{color:var(--paper);border-bottom:.2mm solid var(--rule)}
+
+/* boxes: do it yourself, read before you use */
+.box{position:relative;margin-top:5.5mm;padding:2.6mm 2.6mm 2.5mm;border:.3mm dashed var(--violet);font-size:8.8pt;line-height:1.4}
+.box .tag{background:var(--violet)}
+.box.pink{border-color:var(--pink);border-style:solid}
+.box.pink .tag{background:var(--pink);color:var(--paper)}
+.done{margin-top:2.6mm;display:grid;grid-template-columns:3mm 1fr;column-gap:2mm;font-size:8.8pt;line-height:1.4}
+.done i{width:2.6mm;height:2.6mm;border:.3mm solid var(--mint);margin-top:.7mm}
+.done .lab{font-size:5.6pt;color:var(--mint);margin-right:1.6mm}
+.traps{margin-top:2.6mm}
+.traps div{display:grid;grid-template-columns:2.6mm 1fr;column-gap:2mm;padding:1.2mm 0;font-size:8.6pt;line-height:1.34}
+.traps i{width:1.8mm;height:1.8mm;background:var(--pink);margin-top:1.1mm}
+.traps b{font-weight:500}
+.traps span{color:#d9d4ea}
+
+/* cover */
+.cover .kick{font-size:6.2pt;color:var(--dim);margin-top:5mm}
+.blob{position:relative;margin:19mm 0 0 5mm;border:.35mm solid var(--mint)}
+.blob svg{display:block}
+.cover h1{font-size:44pt;line-height:.98;margin-top:15mm;letter-spacing:-.02em}
+.cover .sub{font-size:13pt;line-height:1.3;margin-top:5mm;max-width:104mm;color:var(--paper)}
+.cover .line{font-size:9.6pt;color:var(--dim);margin-top:4mm;max-width:100mm}
+.cover .who{position:absolute;left:0;bottom:6mm;font-size:9pt;line-height:1.45}
+.cover .who .mono{display:block;font-size:5.8pt;color:var(--dim);margin-top:1.4mm}
+.cover .other{position:absolute;right:0;bottom:6mm;font-size:6.2pt;color:var(--mint);border:.25mm solid var(--mint);padding:1.2mm 2mm}
+
+/* the map */
+.maphead h1{font-size:19pt;margin-top:3mm}
+.maphead p{font-size:8.8pt;color:#d9d4ea;margin-top:1.8mm;max-width:118mm}
+.map{position:relative;width:126mm;height:147mm;margin-top:5mm}
+.map svg{position:absolute;inset:0;width:126mm;height:147mm}
+.blk{position:absolute;border:.3mm solid var(--mint);padding:1.5mm 2.2mm;display:block}
+.blk .tag{top:-3.3mm;height:3.3mm;line-height:3.3mm;font:500 5.4pt/3.3mm "Plex Mono";color:var(--ink);margin:0;display:block}
+.blk b{display:block;font-weight:500;font-size:9.2pt;line-height:1.15}
+.blk span{display:block;font:400 5.5pt/1.3 "Plex Mono";letter-spacing:.03em;color:var(--dim);margin-top:.7mm}
+.blk.ground{border-color:var(--violet)} .blk.ground .tag{background:var(--violet)}
+.blk.base{border-color:#6f6790} .blk.base .tag{background:#6f6790;color:var(--paper)}
+.blk.you{border-color:var(--pink)} .blk.you .tag{background:var(--pink);color:var(--paper)}
+.frame{position:absolute;border:.3mm dashed var(--mint)}
+.lay{position:absolute;font:400 5.5pt/1 "Plex Mono";letter-spacing:.07em;color:var(--dim);white-space:nowrap}
+.flow{position:absolute;font:400 5.3pt/1.5 "Plex Mono";letter-spacing:.03em;color:var(--dim);white-space:nowrap;background:var(--ink);padding:0 .5mm}
+.oper{position:absolute;text-align:center;font-size:8.6pt;color:var(--paper)}
+.oper span{display:block;font:400 5.5pt/1.3 "Plex Mono";color:var(--dim)}
+
+/* projects */
+.proj{display:grid;grid-template-columns:9mm 1fr;column-gap:2mm;padding:2.6mm 0 2.4mm;border-top:.2mm solid var(--rule)}
+.proj .n{font:300 19pt/1 "Plex Sans";color:var(--mint)}
+.proj b{font-weight:500;font-size:10.4pt;display:block;line-height:1.2}
+.proj dl{margin:1.1mm 0 0;display:grid;grid-template-columns:13mm 1fr;row-gap:.7mm;font-size:8.4pt;line-height:1.34}
+.proj dt{font:400 5.5pt/1 "Plex Mono";letter-spacing:.05em;color:var(--dim);padding-top:1.15mm}
+.proj dd{margin:0;color:#e6e2f2}
+.proj dd a{color:var(--mint);font:500 6.2pt/1 "Plex Mono";border:.2mm solid var(--mint);padding:.3mm 1.1mm;margin-right:1mm}
+.steps{margin:2.6mm 0 0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:6mm 1fr;padding:1.5mm 0;border-top:.2mm solid var(--rule);font-size:9.2pt;line-height:1.38}
+.steps li::before{content:counter(s,decimal-leading-zero);font:500 6.2pt/2.1 "Plex Mono";color:var(--mint)}
+.legend{margin-top:2.4mm}
+.legend div{display:grid;grid-template-columns:14.5mm 1fr;column-gap:2.2mm;padding:1.3mm 0;font-size:8.6pt;line-height:1.34}
+.small{font-size:7.6pt;line-height:1.42;color:var(--dim);margin-top:2.4mm}
+.small a{color:var(--paper);border-bottom:.2mm solid var(--rule)}
