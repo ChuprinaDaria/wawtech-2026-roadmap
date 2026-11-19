@@ -79,4 +79,15 @@ R = [
  ("women4cyber", "https://women4cyber.eu/mentorship-programme-2/", "Women4Cyber mentorship", "Women4Cyber", "free", "mentoring", "any", "en"),
  ("widt", "https://www.women-in-defense.tech/", "Women in Defense Tech", "WiDT", "free", "network", "any", "en"),
  ("anti-uav", "https://anti-uav.github.io/", "Anti-UAV benchmark", "Anti-UAV", "free", "dataset", "any", "en"),
+ # boards beyond the Raspberry Pi; added on 19 Nov 2026
+ ("jetson-inference", "https://github.com/dusty-nv/jetson-inference", "Hello AI World", "NVIDIA", "free", "6–10 h", "beginner", "en"),
+ ("ultralytics-jetson", "https://docs.ultralytics.com/guides/nvidia-jetson/", "NVIDIA Jetson: setup and benchmarks", "Ultralytics", "free", "2 h", "beginner", "en"),
+ ("jetson-quickstart", "https://docs.nvidia.com/jetson/orin-nano-devkit/user-guide/latest/quick_start.html", "Jetson Orin Nano Developer Kit: quick start", "NVIDIA", "free", "1 h", "beginner", "en"),
+ ("tensorrt-quickstart", "https://docs.nvidia.com/deeplearning/tensorrt/latest/getting-started/quick-start-guide.html", "TensorRT quick start guide", "NVIDIA", "free", "2 h", "intermediate", "en"),
+ ("jetson-ai-lab", "https://www.jetson-ai-lab.com/", "Jetson AI Lab", "NVIDIA", "free", "self-paced", "intermediate", "en"),
+ ("rknn-toolkit2", "https://github.com/airockchip/rknn-toolkit2", "RKNN-Toolkit2", "Rockchip", "free", "3 h", "intermediate", "en"),
+ ("rknn-model-zoo", "https://github.com/airockchip/rknn_model_zoo", "RKNN Model Zoo", "Rockchip", "free", "3 h", "intermediate", "en"),
+ ("ultralytics-rknn", "https://docs.ultralytics.com/integrations/rockchip-rknn/", "Rockchip RKNN export", "Ultralytics", "free", "1 h", "intermediate", "en"),
+ ("ultralytics-rpi", "https://docs.ultralytics.com/guides/raspberry-pi/", "Raspberry Pi: setup and benchmarks", "Ultralytics", "free", "2 h", "beginner", "en"),
+ ("rpi-ai-hat", "https://www.raspberrypi.com/documentation/accessories/ai-hat-plus.html", "AI HAT+", "Raspberry Pi", "free", "1 h", "beginner", "en"),
 ]

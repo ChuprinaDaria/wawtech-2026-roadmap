@@ -2,6 +2,7 @@
 Usage: python3 build.py en [uk]"""
 import html, importlib, json, re, subprocess, sys
 from pathlib import Path
+import figures
 
 ROOT = Path(__file__).parent
 KEYS = ('id', 'url', 'title', 'provider', 'cost', 'hours', 'level', 'lang')
@@ -79,6 +80,13 @@ class Doc:
                            f'<dt>{e(ui["need"])}</dt><dd>{rich(p["need"])}</dd><dt>{e(ui["build"])}</dt><dd>{rich(p["build"])}</dd>'
                            f'<dt>{e(ui["proof"])}</dt><dd>{rich(p["proof"])}</dd><dt>{e(ui["see"])}</dt><dd>{see}</dd></dl></div></div>')
             return ''.join(out)
+        if k == 'fig': return figures.FIGS[b[1]](self.T.FIG)
+        if k == 'formula':
+            return '<div class="formula">' + ''.join(f'<div><span>{e(a)}</span><span class="c">{rich(c)}</span></div>' for a, c in b[1]) + '</div>'
+        if k == 'table':
+            head = ''.join(f'<th>{e(h)}</th>' for h in b[2])
+            rows = ''.join(f'<tr class="{cls}">' + ''.join(f'<td>{rich(c)}</td>' for c in cells) + '</tr>' for cls, cells in b[3])
+            return f'<table class="t {b[1]}"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table>'
         raise ValueError(k)
 
     def bar(self, current=None):
@@ -154,7 +162,7 @@ class Doc:
         for c in T.CHAPTERS: self.chapter(c)
         self.page(f'<p class="eyebrow mono"><b>—</b>{e(T.CREDITS["eyebrow"])}</p><h1>{e(T.CREDITS["title"])}</h1>' + ''.join(self.block(b) for b in T.CREDITS['blocks']), pid='credits')
         n = len(self.pages)
-        pages = [p.replace('{PN}', f'{i + 1:02d} / {n:02d}') for i, p in enumerate(self.pages)]
+        pages = [p.replace('{PN}', f'{i + 1:02d} / {n:02d}').replace('<section ', f'<section data-n="{i + 1}" ', 1) for i, p in enumerate(self.pages)]
         probe = ("<script>document.fonts.ready.then(function(){document.querySelectorAll('.content').forEach(function(c){"
                  "var d=c.scrollHeight-c.clientHeight;if(d>1)c.parentElement.setAttribute('data-overflow',d)});"
                  "document.body.setAttribute('data-fonts',document.fonts.size)})</script>")
@@ -166,7 +174,7 @@ class Doc:
         pdf = ROOT.parent / f'roadmap-{self.lang}.pdf'
         chrome = ['google-chrome', '--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--generate-pdf-document-outline']
         dom = subprocess.run(chrome + ['--virtual-time-budget=4000', '--dump-dom', out.as_uri()], capture_output=True, text=True).stdout
-        over = re.findall(r'<section class="page[^"]*"(?: id="([^"]*)")? data-overflow="([\d.]+)"', dom)
+        over = [f'p{n}: {float(d):.0f} px' for n, d in re.findall(r'<section data-n="(\d+)"[^>]*? data-overflow="([\d.]+)"', dom)]
         assert 'data-fonts=' in dom, 'the overflow probe did not run'
         subprocess.run(chrome + [f'--print-to-pdf={pdf}', out.as_uri()], capture_output=True, text=True)
         unused = sorted(set(RES) - set(self.used) - SEEN)

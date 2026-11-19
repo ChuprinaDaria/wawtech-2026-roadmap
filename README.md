@@ -18,7 +18,9 @@ a radio link, a person who decides. The roadmap follows that chain. Every block 
 a chapter, and every chapter has the same shape: why it matters, where to read, what to build at home,
 how to tell that you are done.
 
-- 107 free resources. Every link was opened on 19 November 2026.
+- 128 free resources. Every link was opened on 19 November 2026.
+- One worked calculation: how height, camera angle, lens and telemetry fix the number of pixels on a target,
+  and which method fits each number.
 - 14 chapters, from school maths to getting into the field.
 - Six home projects. A Raspberry Pi helps; a laptop with a webcam is enough for most of them.
 
@@ -45,6 +47,7 @@ python3 check_pdf.py en uk                     # checks links, anchors and fonts
 |---|---|
 | `src/resources_core.py`, `src/resources_hw.py` | every link once: address, title, cost, hours, level |
 | `src/text_en.py`, `src/text_uk.py` | the chapters in two languages |
+| `src/figures.py` | the figures; every number in them is computed from one camera model |
 | `src/build.py`, `src/style.css` | the pages as HTML, printed to PDF by headless Chrome |
 | `index.html` | the page behind the QR code |
 

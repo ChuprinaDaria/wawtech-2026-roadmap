@@ -44,4 +44,16 @@ R = [
  ("mit-16842", "https://ocw.mit.edu/courses/16-842-fundamentals-of-systems-engineering-fall-2015/", "16.842 Fundamentals of Systems Engineering", "MIT OpenCourseWare", "free", "10–30 h", "advanced", "en"),
  ("gstreamer-tools", "https://gstreamer.freedesktop.org/documentation/tutorials/basic/gstreamer-tools.html", "GStreamer tools", "GStreamer", "free", "2 h", "beginner", "en"),
  ("ros2-first", "https://docs.ros.org/en/lyrical/First-Steps.html", "ROS 2: first steps", "Open Robotics", "free", "4–6 h", "beginner", "en"),
+ # pixels on target: geometry, thresholds, where the numbers come from; added on 19 Nov 2026
+ ("johnson", "https://en.wikipedia.org/wiki/Johnson%27s_criteria", "Johnson's criteria", "Wikipedia", "free", "20 min", "beginner", "en"),
+ ("ai-tod", "https://github.com/jwwangchn/AI-TOD", "AI-TOD: tiny objects in aerial images", "Wang et al.", "free", "dataset", "intermediate", "en"),
+ ("nwd-paper", "https://arxiv.org/abs/2110.13389", "A Normalized Gaussian Wasserstein Distance for Tiny Object Detection", "Wang et al.", "free", "1 h", "advanced", "en"),
+ ("mavlink-common", "https://mavlink.io/en/messages/common.html", "MAVLink common messages", "MAVLink", "free", "reference", "intermediate", "en"),
+ ("intrinsics", "https://ksimek.github.io/2013/08/13/intrinsic/", "Dissecting the camera matrix: the intrinsic matrix", "Kyle Simek", "free", "30 min", "intermediate", "en"),
+ ("geocalib", "https://github.com/cvg/GeoCalib", "GeoCalib: calibration from a single image", "ETH Zurich", "free", "1 h", "intermediate", "en"),
+ ("pix4d-gsd", "https://support.pix4d.com/hc/en-us/articles/202559809", "Ground sampling distance in photogrammetry", "Pix4D", "free", "15 min", "beginner", "en"),
+ ("slant-range", "https://en.wikipedia.org/wiki/Slant_range", "Slant range", "Wikipedia", "free", "15 min", "beginner", "en"),
+ ("basicirstd", "https://github.com/XinyiYing/BasicIRSTD", "BasicIRSTD toolbox", "Ying et al.", "free", "code", "advanced", "en"),
+ ("ardupilot-gimbal", "https://ardupilot.org/copter/docs/common-cameras-and-gimbals.html", "Cameras and gimbals", "ArduPilot", "free", "1 h", "beginner", "en"),
+ ("ardupilot-terrain", "https://ardupilot.org/copter/docs/terrain-following.html", "Terrain following", "ArduPilot", "free", "30 min", "intermediate", "en"),
 ]

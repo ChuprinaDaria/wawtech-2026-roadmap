@@ -81,6 +81,51 @@ CHAPTERS = [
     ('also', [('Pi camera specifications, to practise on', 'rpi-camera-hw'), ('Edmund Optics guide', 'edmund-guide'), ('Calibration in OpenCV', 'opencv-calib')]),
     ('home', 'Photograph a one-metre object from 2, 5 and 10 metres. Count its height in pixels. Compare with what the lens and sensor numbers predict.'),
     ('done', 'Given a camera, a height and a target size, you can say how many pixels the target gets.'),
+ ], [
+    ('h2', 'Pixels on target: count before you train'),
+    ('why', 'A model never sees a vehicle. It sees a number of pixels, and that number is fixed before take-off by four things: the height above the ground, the angle of the camera, the lens and the size of the target. Put them into one line of arithmetic and you know what can be found, and where in the frame, before a single image is labelled.'),
+    ('fig', 'side'),
+    ('formula', [('f = (W / 2) / tan(HFOV / 2)', 'focal length in pixels, from the frame width W and the horizontal field of view'),
+                 ('SR = H / cos(ONA)', 'slant range, the distance along the ray. ONA is the angle from nadir, from straight down'),
+                 ('px = f · L / SR', 'pixels across a target of size L in the middle of the frame')]),
+    ('p', 'From 100 m at 60° from nadir the slant range is 200 m: the vehicle is 10 px nose-on and 25 px side-on. Tilt the same camera down to 30° and the same 1.8 metres become 17 px. Nothing about the model has changed.'),
+ ], [
+    ('h2', 'The frame is not one number'),
+    ('p', 'The top of the frame looks far and the bottom looks near, so the same target is a dot in one place and an object in another. Cut the frame into bricks, run the formula for the centre of each, and colour it by the worst view of the target. Draw this map before you choose a model.'),
+    ('fig', 'bricks'),
+    ('fig', 'minis'),
+    ('p', 'Read the map as two zones. Far, under the horizon: a dot that says only "something is there". Near, at the bottom edge: enough pixels to say what it is. A target that comes close enough to classify is already sliding out of the bottom of the frame. Height, tilt and a gimbal move these zones. A model does not.'),
+ ], [
+    ('h2', 'Where the four numbers come from'),
+    ('table', 'src', ('Number', 'Source', 'Watch out'), [
+        ('', ('H, height above ground', 'Barometer, GNSS or a rangefinder. In MAVLink: `relative_alt` in `GLOBAL_POSITION_INT`.', 'It is the height above the take-off point. Over a hill or a valley the ground is somewhere else.')),
+        ('', ('ONA, angle from nadir', 'Pitch and roll from `ATTITUDE`, plus the mounting angle of the camera. With a gimbal: its own status message.', 'Without a gimbal the camera tilts with the airframe in every turn.')),
+        ('', ('f, focal length in pixels', 'The field of view and the frame width, or a [calibration](opencv-calib).', 'Count pixels at the detector input, not on the sensor.')),
+        ('', ('L, size of the target', 'A table of dimensions.', 'Take the narrow side: nose-on is the view you will get.')),
+    ]),
+    ('h2', 'Pixels choose the method'),
+    ('table', 'px', ('Narrow side', 'What is there', 'What works'), [
+        ('pink', ('under 4 px', 'Noise. In one frame the target cannot be told from a stone.', 'Motion only: the difference between frames, a track before a detection.')),
+        ('pink', ('4–8 px', 'A dot: "something is there", with no class.', 'A network that paints a mask or a heat map instead of a box, at full resolution.')),
+        ('violet', ('8–16 px', 'A small object, a coarse class at best.', 'A detector on tiles ([SAHI](sahi)) with a head for small scales.')),
+        ('mint', ('16–32 px', 'An object with a class.', 'An ordinary detector, and a box you can track.')),
+        ('mint', ('32 px and more', 'Detail: the type, the parts, the heading.', 'Anything, classic methods included.')),
+    ]),
+    ('p', 'The limits are not pulled from the air. A human observer needs about 2 px across the narrow side to detect a target, 8 px to recognise it and 13 px to identify it: [Johnson\'s criteria](johnson). The [AI-TOD](ai-tod) benchmark calls 2–8 px very tiny, 8–16 px tiny and 16–32 px small.'),
+    ('formula', [('SR_max = f · L / px_min', 'Every pixel of the threshold costs range. For the 1.8 m side: 8 px reach 249 m, 16 px reach 125 m, 32 px reach 62 m.')]),
+ ], [
+    ('h2', 'What the formula leaves out'),
+    ('traps', [('Blur', 'The camera moves while the shutter is open. Blur in pixels is speed times exposure, divided by metres per pixel: 20 m/s at 1/100 s over 10 cm pixels smears every edge across 2 px.'),
+               ('Lens and air', 'The count assumes perfect optics. A real lens, haze and video compression dissolve a small target into the background first.'),
+               ('Ground', 'The height is measured from the take-off point, and the ground is not flat. On a slope the whole map shifts.'),
+               ('Input size', 'Count at the detector input. A 1920 px frame squeezed to 640 px keeps a third of every number above.'),
+               ('The target itself', 'Trees, shadow, camouflage, a turned hull. Count the narrow side, then expect less.')]),
+    ('list', [('res', 'mavlink-common', 'The messages that carry height and attitude: `GLOBAL_POSITION_INT`, `ATTITUDE`, the gimbal status.'),
+              ('res', 'intrinsics', 'What the focal length in pixels is, and where it sits in the camera matrix.'),
+              ('res', 'ai-tod', 'A benchmark where the average object is 12.8 px: what "tiny" does to a detector. Research use only.')]),
+    ('also', [('Metres per pixel', 'pix4d-gsd'), ('Slant range', 'slant-range'), ('Pitch, roll and focal length from one frame: GeoCalib', 'geocalib'), ('Why IoU breaks at 8 px', 'nwd-paper'), ('Small targets as masks: BasicIRSTD', 'basicirstd'), ('Gimbals', 'ardupilot-gimbal'), ('Terrain following', 'ardupilot-terrain')]),
+    ('home', 'Write the calculator: thirty lines of Python. Height, angle, field of view, frame size and target size go in; pixels nose-on and side-on come out. Cut the frame into bricks and colour the map. Then check one brick against a photo taken from a balcony or a hill.'),
+    ('done', 'For any camera and any flight profile you can draw the map of the frame and name the method for each zone.'),
  ]]),
  dict(n=6, layer='air', title='Classic vision: Python, then C++', inp='a frame', out='edges, shapes, motion, geometry', pages=[[
     ('why', 'Not everything needs a network. Thresholds, edges, optical flow and geometry run on a tiny processor and never hallucinate. They still stabilise the video, calibrate the camera and check what the network claims. On board, this code is often C++.'),
@@ -145,8 +190,21 @@ CHAPTERS = [
               ('res', 'tinyml-courseware', 'The Harvard TinyML materials: slides and notebooks, with no access window.'),
               ('res', 'tinyml-edx', 'The same course with video and a schedule. Audit access ends after a few weeks.')]),
     ('also', [('Hailo Model Zoo: compile your own model (v2 branch for Hailo-8)', 'hailo-model-zoo'), ('Exporting to ONNX', 'ultralytics-export'), ('Edge Impulse, free plan', 'edge-impulse')]),
-    ('home', 'Export your detector to ONNX and run it on a laptop CPU with ONNX Runtime. Quantise it. Measure speed and accuracy before and after. If you have a Pi, repeat there.'),
+    ('home', 'Export your detector to ONNX and run it on a laptop CPU with ONNX Runtime. Quantise it. Measure speed and accuracy before and after. If you have a board, repeat there.'),
     ('done', 'You have one table: model, megabytes, frames per second, accuracy.'),
+ ], [
+    ('h2', 'Three families of boards'),
+    ('p', 'The chip decides which tool turns your ONNX file into something it can run, and that tool decides which layers survive. Choose a board by its toolchain first, by watts second, and by the number on the box last.'),
+    ('table', 'boards', ('Board', 'Accelerator', 'From ONNX to the chip', 'The price'), [
+        ('', ('Raspberry Pi 5 with Hailo', 'A separate chip on PCIe: Hailo-8L, 13 TOPS, or Hailo-8, 26 TOPS.', 'Hailo Dataflow Compiler on a Linux PC. Integers only, with calibration.', 'A few watts. The compiler is strict with unusual layers.')),
+        ('', ('NVIDIA Jetson Orin Nano', 'A GPU with CUDA, up to 67 TOPS.', 'TensorRT builds the engine on the board itself. 16-bit needs no calibration.', '7 to 25 W, heat and money. Runs almost any model.')),
+        ('', ('Orange Pi 5 and other RK3588 boards', 'An NPU inside the processor, up to 6 TOPS.', 'RKNN-Toolkit2 on an x86 Linux PC. 16-bit, or 8-bit integers with calibration.', 'Usually the cheapest. Thinner documentation.')),
+    ]),
+    ('list', [('res', 'jetson-inference', 'Classification, detection and segmentation on a Jetson with TensorRT, step by step.'),
+              ('res', 'ultralytics-jetson', 'Setting up a Jetson, and what each precision gives: 32-bit, 16-bit, 8-bit.'),
+              ('res', 'rknn-toolkit2', 'The converter for Rockchip NPUs, with the lists of supported chips and layers.')]),
+    ('also', [('Jetson Orin Nano: quick start', 'jetson-quickstart'), ('TensorRT quick start', 'tensorrt-quickstart'), ('Jetson AI Lab', 'jetson-ai-lab'), ('Ready models for RK3588', 'rknn-model-zoo'), ('Exporting to RKNN', 'ultralytics-rknn'), ('Raspberry Pi: benchmarks', 'ultralytics-rpi'), ('AI HAT+', 'rpi-ai-hat')]),
+    ('box', 'pink', 'before you buy', 'Export your own model to ONNX and read the list of layers the chip supports. One unsupported layer in the middle of a network costs more than any benchmark gives.'),
  ]]),
  dict(n=11, layer='base', title='Electronics, and a Pi at home', inp='a 5 V supply and some pins', out='a board that sees and talks', pages=[[
     ('why', 'A vision engineer who cannot read a pinout waits for someone else all day. Voltage, current and three serial buses cover most of what a companion computer needs, and you can learn them in a browser before you buy a board.'),
@@ -195,7 +253,7 @@ CHAPTERS = [
     ('projects', [
         dict(n=1, name='A board in the browser', need='A browser.', build='An ESP32 in Wokwi: an LED, a sensor on I2C, readings over UART.', proof='The logic analyser shows the address of your sensor.', see=[11]),
         dict(n=2, name='Classic vision, twice', need='A laptop with a webcam.', build='A tracker of a bright object in Python. Then the same in C++ with CMake.', proof='Both print the same coordinates, and you know which is faster.', see=[4, 6]),
-        dict(n=3, name='How many pixels', need='A Raspberry Pi with a camera, or any camera with a specification sheet.', build='Capture frames, measure the field of view, predict the pixels on a target at 2, 5 and 10 metres.', proof='Your prediction is within ten percent of the measurement.', see=[5, 11]),
+        dict(n=3, name='How many pixels', need='A Raspberry Pi with a camera, or any camera with a specification sheet.', build='Capture frames, measure the field of view, predict the pixels on a target at 2, 5 and 10 metres. Then draw the brick map from chapter 5 for the view from your window.', proof='Your prediction is within ten percent of the measurement.', see=[5, 11]),
     ]),
  ], [
     ('projects', [
@@ -235,10 +293,21 @@ CHAPTERS = [
 CREDITS = dict(eyebrow='SMALL PRINT', title='Credits', blocks=[
     ('p', 'Text and layout © 2026 Daria Chuprina. You may share and adapt this roadmap under the Creative Commons Attribution 4.0 licence.'),
     ('p', 'The shape on the cover is the mask of one vehicle in a synthetic frame, 415 by 222 pixels in the original. 3D model: Abrams M1A1 [Free] by DerpDude, CC BY 4.0. Typeface: IBM Plex, SIL Open Font Licence.'),
-    ('h2', 'About the links'),
-    ('p', 'Every link was opened on 19 November 2026. Some sites refuse automated checks, so these were opened by hand: OpenCV, the Raspberry Pi documentation, Edmund Optics, Basler, NovAtel, Roboflow, Blender.'),
     ('p', 'Found a dead link, or a better resource? Tell me: [linkedin.com/in/dchuprina](https://www.linkedin.com/in/dchuprina/).'),
     ('p', 'The latest version and the source files: [chuprinadaria.github.io/wawtech-2026-roadmap](https://chuprinadaria.github.io/wawtech-2026-roadmap/).'),
     ('h2', 'What is not here'),
     ('p', 'Paid courses, programmes that only companies can join, and anything I could not open. Work datasets, work models and work footage are not here either, and they will not be.'),
 ])
+
+
+# labels and captions of the figures; the numbers in braces are filled in by figures.py
+FIG = dict(
+    comma=False, m='m', sky='sky', horizon='horizon', cam='camera',
+    bottom='bottom of frame', axis='axis', top='top of frame',
+    key=('under 8 px', '8 to 16 px', '16 px and more', 'sky'),
+    side_cap='Height {h} m, camera axis {ona}° from nadir, a {hfov}° lens, a frame {w} px wide. The target is a vehicle {long} × {narrow} m: the first number is nose-on, the second side-on.',
+    bricks_cap='Height {h} m, axis {ona}° from nadir, {roll}° of roll. In each brick: pixels nose-on … side-on, and the slant range to the ground at that point.',
+    minis=(('Level, looking far · ONA {ona1}°', 'A dot out to {dot} m, a small object out to {small} m. Most of the frame is too far.'),
+           ('Tilted down · ONA {ona2}°', 'Every brick has 16 px or more. The frame now ends {end} m ahead.'),
+           ('{roll}° of roll, no gimbal', 'The good bricks slide into one lower corner. A stabilised camera gives the band back.')),
+)
