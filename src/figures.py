@@ -133,7 +133,7 @@ def side(L):
     o.append(f'<circle cx="{x0}" cy="{yd:.2f}" r=".95" fill="{PAPER}"/>')
     o.append(f'<text x="{x0}" y="{yd - 2:.2f}" text-anchor="middle" font-size="1.75" fill="{DIM}">{L["cam"]}</text>')
     # what each of the three rays gives
-    for g, name, anchor in ((bot, L['bottom'], 'end'), (mid, L['axis'], 'start'), (top, L['top'], 'end')):
+    for g, name, anchor in ((bot, L['bottom'], 'end'), (mid, L['axis'], 'middle'), (top, L['top'], 'end')):
         x, y = X(g[1]), yg + 9.2
         if g is mid:
             o.append(f'<line x1="{x:.2f}" y1="{yg}" x2="{x:.2f}" y2="{y - 2.3:.2f}" stroke="{DIM}" stroke-width=".15"/>')
