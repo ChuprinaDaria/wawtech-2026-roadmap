@@ -18,7 +18,7 @@ META = dict(
     kicker='WAWTECH 2026 · ВАРШАВА · МАТЕРІАЛ ДО ВОРКШОПУ',
     cover_tag='що бачить модель: {w} × {h} px',
     cover_line='Модель бачить пляму пікселів. Інженер має бачити все, що цю пляму створило, і все, що буде далі.',
-    author='Дарія Чупріна', role='CV / Embedded Engineer, Blue Bird Tech',
+    author='Дарія Чупріна', role='Computer Vision Engineer',
     version='Версія 1 · кожне посилання відкрито 19 листопада 2026',
     other='In English', other_url='https://chuprinadaria.github.io/wawtech-2026-roadmap/roadmap-en.pdf',
     foot='УСЯ КАРТИНА · В1 · 19.11.2026', map='КАРТА',

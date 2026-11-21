@@ -9,7 +9,7 @@ META = dict(
     kicker='WAWTECH 2026 · WARSAW · WORKSHOP HANDOUT',
     cover_tag='what the model sees: {w} × {h} px',
     cover_line='A model sees a blob of pixels. An engineer has to see everything that made it, and everything that happens next.',
-    author='Daria Chuprina', role='CV / Embedded Engineer, Blue Bird Tech',
+    author='Daria Chuprina', role='Computer Vision Engineer',
     version='Version 1 · every link opened on 19 November 2026',
     other='Українською', other_url='https://chuprinadaria.github.io/wawtech-2026-roadmap/roadmap-uk.pdf',
     foot='THE WHOLE PICTURE · V1 · 19 NOV 2026', map='MAP',
