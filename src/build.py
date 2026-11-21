@@ -102,11 +102,12 @@ class Doc:
     # ---- pages
     def cover(self):
         M = self.M; w = 100; h = w * SIL['h'] / SIL['w']
-        pts = ' '.join(f'{x},{y}' for x, y in SIL['points'])
+        pts = ' '.join(f'{SIL["w"] - x},{y}' for x, y in SIL['points'])   # mirrored: the gun points left, out from under the photo
         other = f'<a class="other mono" href="{e(M["other_url"])}">{e(M["other"])} ↗</a>' if M.get('other_url') else ''
         body = (f'<p class="kick mono">{e(M["kicker"])}</p>'
-                f'<div class="blob" style="width:{w + 8}mm;padding:4mm"><span class="tag">{e(M["cover_tag"].format(w=SIL["px"][0], h=SIL["px"][1]))}</span>'
+                f'<div class="hero"><div class="blob" style="width:{w + 8}mm;padding:4mm"><span class="tag">{e(M["cover_tag"].format(w=SIL["px"][0], h=SIL["px"][1]))}</span>'
                 f'<svg viewBox="0 0 {SIL["w"]} {SIL["h"]}" style="width:{w}mm;height:{h:.1f}mm"><polygon points="{pts}" fill="#02feb9"/></svg></div>'
+                f'<img class="me" src="../img/cover-frame.png" alt="{e(M["author"])}, I am going to WAWTech"></div>'
                 f'<h1>{e(M["title"])}</h1><p class="sub">{e(M["subtitle"])}</p><p class="line">{e(M["cover_line"])}</p>'
                 f'<div class="who">{e(M["author"])}<br>{e(M["role"])}<span class="mono">{e(M["version"])}</span></div>{other}')
         self.pages.append(f'<section class="page cover" id="cover"><div class="content">{body}</div></section>')
