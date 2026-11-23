@@ -8,6 +8,7 @@
   let state = { camera: 'plain', carrier: 'fly', board: 'mid', night: false, air: 'clear', h: 100, gr: 400, alt: 0 };
   let lang = /^uk/i.test(navigator.language || '') ? 'uk' : 'en';
   try { Object.assign(state, JSON.parse(root.dataset.state || '{}')); } catch (e) { /* a broken attribute changes nothing */ }
+  try { const kept = localStorage.getItem('lim-lang'); if (TEXT[kept]) lang = kept; } catch (e) { /* no storage: the browser language stays */ }
   if (TEXT[root.dataset.lang]) lang = root.dataset.lang;
 
   // the scene in its own units: 0.55 of a unit per metre, the same along both axes
@@ -242,7 +243,10 @@
     root.querySelector('.lim-legend').innerHTML = [['a', MINT], ['b', YEL], ['c', PINK], ['d', GREY]].map((q) => '<span><i style="background:' + q[1] + '"></i>' + esc(T.legend[q[0]]) + '</span>').join('');
     root.querySelector('.lim-foot').textContent = T.foot;
     const flip = root.querySelector('.lim-lang'); flip.textContent = T.other; flip.setAttribute('aria-label', T.aria.lang);
-    root.setAttribute('lang', lang);
+    root.setAttribute('lang', lang); root.setAttribute('aria-label', T.aria.scene);
+    // the page around the scene speaks the same language: it shows only the pieces marked for <html lang>
+    const page = document.documentElement, title = page.dataset[lang === 'uk' ? 'titleUk' : 'titleEn'];
+    page.lang = lang; if (title) document.title = title;
   }
 
   function update(patch) {
@@ -287,7 +291,11 @@
     if (t.dataset.drag === 'drone') update({ h: state.h + dir[1] * 5 * step });
     else update({ gr: state.gr + dir[0] * 10 * step, alt: Math.max(0, state.alt + dir[1] * 10 * step) });
   });
-  root.querySelector('.lim-lang').addEventListener('click', () => { lang = lang === 'uk' ? 'en' : 'uk'; update(); });
+  root.querySelector('.lim-lang').addEventListener('click', () => {
+    lang = lang === 'uk' ? 'en' : 'uk';
+    try { localStorage.setItem('lim-lang', lang); } catch (e) { /* the choice lasts until the page is closed */ }
+    update();
+  });
 
   update();
 })();

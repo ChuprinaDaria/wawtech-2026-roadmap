@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-title-en="The whole picture" data-title-uk="Вся картина">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The whole picture · Вся картина</title>
+<title>The whole picture</title>
 <meta name="description" content="A free roadmap from Python backend to computer vision in defence tech. The handout for a WAWTech 2026 workshop, in English and Ukrainian.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The whole picture">
@@ -17,6 +17,9 @@
 @font-face{font-family:"Plex Sans";font-weight:400;font-display:swap;src:url("assets/plex-sans-regular.woff2") format("woff2")}
 @font-face{font-family:"Plex Mono";font-weight:400;font-display:swap;src:url("assets/plex-mono-regular.woff2") format("woff2")}
 :root{--ink:#0d021b;--rule:#3a2a5c;--paper:#fdfdfb;--dim:#a39bbd;--mint:#02feb9}
+/* one language at a time: the scene sets <html lang>, its button switches the whole page */
+html[lang="uk"] [data-l="en"],html[lang="en"] [data-l="uk"]{display:none}
+html[lang="uk"] .get a[hreflang="uk"]{order:-1}
 *{box-sizing:border-box}
 html{background:var(--ink);color-scheme:dark;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;color:var(--paper);font:400 1rem/1.5 "Plex Sans",system-ui,sans-serif}
@@ -48,7 +51,6 @@ h1{margin-top:1.6rem;font-weight:300;font-size:clamp(2rem,10.4vw,3.6rem);line-he
 .inside{margin-top:1.4rem;border-top:1px solid var(--rule)}
 .inside div{display:grid;grid-template-columns:3.1rem 1fr;column-gap:.6rem;padding:.85rem 0;border-bottom:1px solid var(--rule)}
 .inside dt{padding-top:.14rem;color:var(--mint);font-size:.95rem;letter-spacing:.02em}
-.inside dd span{display:block;color:var(--dim)}
 
 footer{margin-top:2.4rem;font-size:.92rem}
 footer a{color:var(--paper);text-decoration:underline;text-decoration-color:var(--mint);text-underline-offset:.22em}
@@ -63,52 +65,50 @@ footer a:hover,footer a:focus-visible{color:var(--mint)}
 </head>
 <body>
 <main>
-  <p class="mono kick">WAWTech 2026 · Warsaw · <a href="classic/">classic version ↗</a></p>
+  <p class="mono kick">WAWTech 2026 · <span data-l="en">Warsaw</span><span data-l="uk" lang="uk">Варшава</span> · <a href="classic/"><span data-l="en">classic version</span><span data-l="uk" lang="uk">класична версія</span> ↗</a></p>
 
   <section class="limits" id="limits" aria-label="Limits first: drag the drone and the target, and see which approach survives">
     <noscript><p class="lim-hint">This part needs JavaScript. The <a href="classic/">classic version</a> works without it.</p></noscript>
   </section>
 
-  <h1>The whole picture</h1>
-  <p class="sub">A free roadmap from Python backend to computer vision in defence tech.</p>
-  <p class="sub" lang="uk">Безкоштовна дорожня карта з Python-бекенду в комп’ютерний зір для оборонних технологій.</p>
+  <h1><span data-l="en">The whole picture</span><span data-l="uk" lang="uk">Вся картина</span></h1>
+  <p class="sub" data-l="en">A free roadmap from Python backend to computer vision in defence tech.</p>
+  <p class="sub" data-l="uk" lang="uk">Безкоштовна дорожня карта з Python-бекенду в комп’ютерний зір для оборонних технологій.</p>
 
   <nav class="get" aria-label="The roadmap as PDF">
     <a class="pdf" href="roadmap-en.pdf" hreflang="en">
-      <span class="mono tag">English</span>
+      <span class="mono tag"><span data-l="en">English</span><span data-l="uk" lang="uk">Англійською</span></span>
       <b>The whole picture</b>
-      <span class="mono meta">PDF · 32 pages · 2.2 MB</span>
+      <span class="mono meta"><span data-l="en">PDF · 32 pages · 2.2 MB</span><span data-l="uk" lang="uk">PDF · 32 сторінки · 2,2 МБ</span></span>
     </a>
-    <a class="pdf" href="roadmap-uk.pdf" hreflang="uk" lang="uk">
-      <span class="mono tag">Українською</span>
-      <b>Вся картина</b>
-      <span class="mono meta">PDF · 32 сторінки · 2,2 МБ</span>
+    <a class="pdf" href="roadmap-uk.pdf" hreflang="uk">
+      <span class="mono tag"><span data-l="en">Ukrainian</span><span data-l="uk" lang="uk">Українською</span></span>
+      <b lang="uk">Вся картина</b>
+      <span class="mono meta"><span data-l="en">PDF · 32 pages · 2.2 MB</span><span data-l="uk" lang="uk">PDF · 32 сторінки · 2,2 МБ</span></span>
     </a>
   </nav>
 
-  <p class="line">A model sees a blob of pixels. An engineer has to see everything that made it, and everything that happens next.</p>
+  <p class="line" data-l="en">A model sees a blob of pixels. An engineer has to see everything that made it, and everything that happens next.</p>
+  <p class="line" data-l="uk" lang="uk">Модель бачить пляму пікселів. Інженер має бачити все, що цю пляму створило, і все, що буде далі.</p>
 
   <dl class="inside">
     <div>
       <dt class="mono">142</dt>
-      <dd>free resources, checked on 23 November 2026
-        <span lang="uk">безкоштовних ресурсів, перевірено 23 листопада 2026</span></dd>
+      <dd><span data-l="en">free resources, checked on 23 November 2026</span><span data-l="uk" lang="uk">безкоштовних ресурсів, перевірено 23 листопада 2026</span></dd>
     </div>
     <div>
       <dt class="mono">15</dt>
-      <dd>chapters, from the lens to the radio link
-        <span lang="uk">розділів, від об’єктива до радіоканалу</span></dd>
+      <dd><span data-l="en">chapters, from the lens to the radio link</span><span data-l="uk" lang="uk">розділів, від об’єктива до радіоканалу</span></dd>
     </div>
     <div>
       <dt class="mono">6</dt>
-      <dd>home projects, from a browser to a simulated flight
-        <span lang="uk">домашніх проєктів, від браузера до польоту в симуляторі</span></dd>
+      <dd><span data-l="en">home projects, from a browser to a simulated flight</span><span data-l="uk" lang="uk">домашніх проєктів, від браузера до польоту в симуляторі</span></dd>
     </div>
   </dl>
 
   <footer>
-    <p>Daria Chuprina · <a href="https://www.linkedin.com/in/dchuprina/">LinkedIn</a> · <a href="https://github.com/ChuprinaDaria/wawtech-2026-roadmap">source on GitHub</a></p>
-    <p class="fine">Text and layout: CC BY 4.0. Fonts: IBM Plex, SIL OFL 1.1.</p>
+    <p><span data-l="en">Daria Chuprina</span><span data-l="uk" lang="uk">Дарія Чупріна</span> · <a href="https://www.linkedin.com/in/dchuprina/">LinkedIn</a> · <a href="https://github.com/ChuprinaDaria/wawtech-2026-roadmap"><span data-l="en">source on GitHub</span><span data-l="uk" lang="uk">код на GitHub</span></a></p>
+    <p class="fine"><span data-l="en">Text and layout: CC BY 4.0. Fonts: IBM Plex, SIL OFL 1.1.</span><span data-l="uk" lang="uk">Текст і верстка: CC BY 4.0. Шрифти: IBM Plex, SIL OFL 1.1.</span></p>
   </footer>
 </main>
 <script src="limits/model.js"></script>
