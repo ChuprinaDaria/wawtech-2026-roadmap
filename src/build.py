@@ -2,7 +2,7 @@
 Usage: python3 build.py en [uk]"""
 import html, importlib, json, re, subprocess, sys
 from pathlib import Path
-import figures
+import figures, scenes
 
 ROOT = Path(__file__).parent
 KEYS = ('id', 'url', 'title', 'provider', 'cost', 'hours', 'level', 'lang')
@@ -27,7 +27,7 @@ def rich(s):
 class Doc:
     def __init__(self, lang):
         self.T = importlib.import_module(f'text_{lang}')
-        self.M, self.lang, self.pages, self.used = self.T.META, lang, [], []
+        self.M, self.lang, self.pages, self.used, self.scenes = self.T.META, lang, [], [], None
 
     # ---- pieces
     def meta_line(self, r):
@@ -94,6 +94,15 @@ class Doc:
                 formula = f'<span class="f mono">{e(f)}</span>' if f else ''
                 out.append(f'<div><i class="mono">{self.qn:02d}</i><span><b>{e(q)}</b><span class="a">{rich(a)}</span>{formula}</span></div>')
             return '<div class="faq">' + ''.join(out) + '</div>'
+        if k == 'scene':                                               # a picture from the scene of the landing page
+            if self.scenes is None: self.scenes = scenes.render(self.lang)
+            spec, cells = scenes.SPECS[b[1]], []
+            for i, p in enumerate(spec['panels']):
+                r = self.scenes[f'{b[1]}{i}']
+                if spec.get('who'): cells.append(f'<div class="row"><div class="pic">{r["svg"]}</div><div class="lim-who">{r["who"]}</div></div>')
+                else: cells.append(f'<div class="{p.get("hush", "")}"><div class="pic">{r["svg"]}</div>' + (f'<p class="say">{r["say"]}</p>' if spec.get('say') else '') + '</div>')
+            return (f'<figure class="scene n{len(cells)}{" who" if spec.get("who") else ""}{" side" if spec.get("side") else ""}"><div class="panels">{"".join(cells)}</div>'
+                    f'<figcaption>{rich(b[2])}</figcaption></figure>')
         raise ValueError(k)
 
     def bar(self, current=None):

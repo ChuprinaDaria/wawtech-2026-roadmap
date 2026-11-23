@@ -154,3 +154,38 @@ table.t{width:100%;border-collapse:collapse;margin-top:3mm;font-size:8.2pt;line-
 .t.src th:nth-child(1){width:25mm} .t.src th:nth-child(2){width:53mm}
 .t.boards th:nth-child(1){width:25mm} .t.boards th:nth-child(2){width:28mm} .t.boards th:nth-child(3){width:42mm}
 .t td{overflow-wrap:break-word}
+
+/* pictures taken from the scene of the landing page: scenes.py asks the scene script itself to draw them */
+.scene{margin:3mm 0 0}
+.scene .panels{display:grid;gap:2.4mm}
+.scene.n2 .panels{grid-template-columns:1fr 1fr}
+.scene .pic{border:.3mm solid var(--rule);border-radius:2mm;overflow:hidden;background:#2a1470}
+.scene .pic svg{display:block;width:100%;height:auto}
+.scene .lim-t{font-family:"Plex Sans"}
+/* no dark edge around the labels and no grass in the small panels: in print each of them costs hundreds of kilobytes */
+.scene:not(.side) rect[fill$="grass)"]{display:none}
+/* a dashed circle hundreds of metres wide is thousands of strokes in a PDF: the discs get a solid outline here */
+.scene .lim-rings circle{stroke-dasharray:none}
+/* the slant range sits on the mint beam; without the dark edge it reads better in white */
+.scene text.lim-w-tri[transform]{fill:#fdfdfb;font-weight:500}
+.scene .lim-tap,.scene .lim-arrows{display:none}
+.scene .hush-rings .lim-rings,.scene .hush-rings .lim-w-rings{opacity:.25}
+.scene .hush-frame .lim-frame{opacity:.3}
+.scene .no-far .lim-w-far{display:none}
+.scene .say{margin-top:1.2mm;font-size:8.2pt;line-height:1.25;text-align:center}
+.scene figcaption{margin-top:1.4mm;font-size:7.6pt;line-height:1.36;color:var(--dim)}
+.scene figcaption a.in{color:var(--mint);border-bottom:.2mm solid var(--mint)}
+.scene.who .panels{gap:1.4mm}
+.scene.side{display:grid;grid-template-columns:88mm 1fr;column-gap:3mm;align-items:end}
+.scene.side figcaption{margin:0 0 .6mm}
+.scene .row{display:grid;grid-template-columns:27mm 1fr;column-gap:3mm;align-items:center}
+.scene .row .pic{border:0;border-radius:99mm;background:none}
+.scene .lim-who{display:grid;grid-template-columns:repeat(6,1fr);text-align:center}
+.scene .lim-p svg{display:block;width:7mm;margin:0 auto}
+.scene .lim-p b{display:block;margin-top:.4mm;font-weight:400;font-size:6.6pt;line-height:1.2}
+.scene .lim-p span{display:inline-block;margin-top:.4mm;padding:.5mm .9mm;border-radius:1mm;font:400 5pt/1 "Plex Mono";white-space:nowrap}
+.scene .lim-p.ok span{border:.2mm solid var(--mint);color:var(--mint)}
+.scene .lim-p.meh span{border:.2mm solid #ffd84a;color:#ffd84a}
+.scene .lim-p.no b,.scene .lim-p.x b{color:var(--dim);text-decoration:line-through}
+.scene .lim-p.no span{background:var(--pink);color:var(--paper)}
+.scene .lim-p.x span{background:var(--rule);color:#c9c3e0}

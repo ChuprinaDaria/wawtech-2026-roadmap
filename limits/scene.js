@@ -88,7 +88,7 @@
   }
 
   function target(tx, ty, air) {
-    const arrows = '<g stroke="' + PAPER + '" stroke-width="1.6" fill="' + PAPER + '" opacity=".9"><path d="M0,-31 l0,-10"/><path d="M-4.5,-40 l4.5,-7 l4.5,7 z"/>' +
+    const arrows = '<g class="lim-arrows" stroke="' + PAPER + '" stroke-width="1.6" fill="' + PAPER + '" opacity=".9"><path d="M0,-31 l0,-10"/><path d="M-4.5,-40 l4.5,-7 l4.5,7 z"/>' +
       '<path d="M26,-12 l9,0"/><path d="M34,-16.5 l7,4.5 l-7,4.5 z"/><path d="M-26,-12 l-9,0"/><path d="M-34,-16.5 l-7,4.5 l7,4.5 z"/></g>';
     if (air) {
       return '<g transform="translate(' + tx + ' ' + (ty + 12) + ')">' + arrows + '<g transform="translate(0 -12)"><ellipse cx="0" cy="0" rx="9" ry="4.5" fill="' + YEL + '" stroke="' + INK + '" stroke-width="1.2"/>' +
@@ -115,7 +115,7 @@
     if (state.air !== 'clear') s += '<g stroke="' + grey + '" stroke-width="2" stroke-linecap="round" opacity=".9"><path d="M186,64 l40,0 M192,70 l30,0' + (state.air === 'fog' ? ' M182,76 l48,0' : '') + '"/></g>';
     const tapSun = state.night ? T.scene.tapDay : T.scene.tapNight;
     const tapAir = { clear: T.scene.tapHaze, haze: T.scene.tapFog, fog: T.scene.tapClear }[state.air];
-    s += '<g class="lim-t" font-size="10.5" text-anchor="middle"><text x="314" y="88" fill="' + (state.night ? '#fdf3c4' : YEL) + '">' + esc(tapSun) + '</text>' +
+    s += '<g class="lim-t lim-tap" font-size="10.5" text-anchor="middle"><text x="314" y="88" fill="' + (state.night ? '#fdf3c4' : YEL) + '">' + esc(tapSun) + '</text>' +
       '<text x="206" y="' + (state.air === 'clear' ? 70 : 90) + '" fill="' + PAPER + '">' + esc(tapAir) + '</text></g>';
     return s;
   }
@@ -139,22 +139,22 @@
     let s = '<rect x="-18" y="0" width="378" height="330" fill="url(#lim-' + (state.night ? 'night' : 'day') + ')"/>';
 
     // how many pixels the target still gets at this distance: three discs around the camera
-    s += '<g clip-path="url(#lim-above)">' +
+    s += '<g clip-path="url(#lim-above)"><g class="lim-rings">' +
       '<circle cx="' + cx + '" cy="' + cy + '" r="' + r[2] + '" fill="' + PINK + '" fill-opacity=".20"/>' +
       '<circle cx="' + cx + '" cy="' + cy + '" r="' + r[1] + '" fill="' + YEL + '" fill-opacity=".30"/>' +
       '<circle cx="' + cx + '" cy="' + cy + '" r="' + r[0] + '" fill="' + MINT + '" fill-opacity=".40"/>' +
-      [[r[0], MINT], [r[1], YEL], [r[2], PINK]].map((q) => '<circle cx="' + cx + '" cy="' + cy + '" r="' + q[0] + '" fill="none" stroke="' + q[1] + '" stroke-width="1.2" stroke-dasharray="3 4"/>').join('');
+      [[r[0], MINT], [r[1], YEL], [r[2], PINK]].map((q) => '<circle cx="' + cx + '" cy="' + cy + '" r="' + q[0] + '" fill="none" stroke="' + q[1] + '" stroke-width="1.2" stroke-dasharray="3 4"/>').join('') + '</g>';
 
     // the frame: everything between its two edge rays, coloured by the same three distances
     const len = Math.max(1, Math.hypot(tx - cx, ty - cy)), far = Math.max(60, Math.min(r[2], 460));
-    s += '<linearGradient id="lim-cone" gradientUnits="userSpaceOnUse" x1="' + cx + '" y1="' + cy + '" x2="' + (cx + (tx - cx) / len * far) + '" y2="' + (cy + (ty - cy) / len * far) + '">' +
+    s += '<g class="lim-frame"><linearGradient id="lim-cone" gradientUnits="userSpaceOnUse" x1="' + cx + '" y1="' + cy + '" x2="' + (cx + (tx - cx) / len * far) + '" y2="' + (cy + (ty - cy) / len * far) + '">' +
       '<stop offset="0" stop-color="' + MINT + '" stop-opacity=".6"/><stop offset="' + Math.min(.6, r[0] / far).toFixed(2) + '" stop-color="' + MINT + '" stop-opacity=".5"/>' +
       '<stop offset="' + Math.min(.85, r[1] / far).toFixed(2) + '" stop-color="' + YEL + '" stop-opacity=".4"/><stop offset="1" stop-color="' + PINK + '" stop-opacity=".32"/></linearGradient>' +
-      '<polygon points="' + cone.poly + '" fill="url(#lim-cone)"/><polygon points="' + cone.poly + '" fill="url(#lim-hatch)"/></g>';
+      '<polygon points="' + cone.poly + '" fill="url(#lim-cone)"/><polygon points="' + cone.poly + '" fill="url(#lim-hatch)"/></g></g>';
 
     // the classic triangle: height, ground range, slant range, and the angle from straight down
     const corner = Y(state.alt), flat = Math.abs(cy - corner) < 3;
-    s += '<g filter="url(#lim-pen)" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+    s += '<g class="lim-tri" filter="url(#lim-pen)" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
       '<path d="M' + cx + ',' + cy + ' L' + X(cone.lo.x).toFixed(1) + ',' + Y(cone.lo.y).toFixed(1) + ' M' + cx + ',' + cy + ' L' + X(cone.hi.x).toFixed(1) + ',' + Y(cone.hi.y).toFixed(1) + '" stroke="' + PAPER + '" stroke-width="1.2" stroke-dasharray="5 5" clip-path="url(#lim-above)"/>' +
       '<path d="M' + cx + ',' + cy + ' L' + cx + ',' + GROUND + '" stroke="' + PAPER + '" stroke-width="1.2" stroke-dasharray="3 4" opacity=".7"/>' +
       '<path d="M' + cx + ',' + cy + ' L' + cx + ',' + corner + ' L' + tx + ',' + ty + '" stroke="' + PAPER + '" stroke-width="2.4"/>' +
@@ -164,7 +164,7 @@
 
     s += '<rect x="-18" y="255" width="378" height="75" fill="#0b3b2a"/><rect x="-18" y="255" width="378" height="12" fill="url(#lim-grass)"/>';
     s += sky(T) + girl() + carrier(cy) + target(tx, ty, air);
-    s += '<g fill="' + PAPER + '" opacity=".9"><path d="M-12,' + (cy - 3) + ' l5,-8 l5,8 z"/><path d="M-12,' + (cy + 3) + ' l5,8 l5,-8 z"/></g>';
+    s += '<g class="lim-arrows" fill="' + PAPER + '" opacity=".9"><path d="M-12,' + (cy - 3) + ' l5,-8 l5,8 z"/><path d="M-12,' + (cy + 3) + ' l5,8 l5,-8 z"/></g>';
 
     // fog and haze: a veil that thickens with distance
     if (state.air !== 'clear') {
@@ -182,7 +182,7 @@
       if (!o.force && (box[0] < -16 || box[0] + box[2] > 358 || box[1] < 96 || box[1] + box[3] > GROUND + 2 ||
           taken.some((t) => box[0] < t[0] + t[2] && box[0] + box[2] > t[0] && box[1] < t[1] + t[3] && box[1] + box[3] > t[1]))) return false;
       taken.push(box);
-      s += '<text x="' + x.toFixed(0) + '" y="' + y.toFixed(0) + '" fill="' + o.fill + '" font-size="' + size + '"' + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + (o.turn ? ' transform="' + o.turn + '"' : '') + '>' + esc(text) + '</text>';
+      s += '<text x="' + x.toFixed(0) + '" y="' + y.toFixed(0) + '" fill="' + o.fill + '" font-size="' + size + '"' + (o.cls ? ' class="' + o.cls + '"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + (o.turn ? ' transform="' + o.turn + '"' : '') + '>' + esc(text) + '</text>';
       return true;
     };
     s += '<g class="lim-t">';
@@ -190,24 +190,24 @@
     s += '<rect x="' + (bx - 4) + '" y="' + (by - 13) + '" width="46" height="18" rx="9" fill="' + INK + '" fill-opacity=".8" stroke="' + zone(d.px) + '" stroke-width="1.4"/>';
     put(pxText, bx + 19, by, { fill: zone(d.px), size: 12, anchor: 'middle', force: true, box: [bx - 4, by - 13, 46, 18] });
     const hText = fill(T.scene.h, Math.round(state.h));
-    put(hText, cx + 7, Math.min(GROUND - 6, mid(cy, GROUND) + 4), { fill: PAPER, size: 12.5 }) || put(hText, cx + 7, cy - 22, { fill: PAPER, size: 12.5 }) || put(hText, cx + 30, cy + 4, { fill: PAPER, size: 12.5 });
+    put(hText, cx + 7, Math.min(GROUND - 6, mid(cy, GROUND) + 4), { fill: PAPER, size: 12.5, cls: 'lim-w-tri' }) || put(hText, cx + 7, cy - 22, { fill: PAPER, size: 12.5, cls: 'lim-w-tri' }) || put(hText, cx + 30, cy + 4, { fill: PAPER, size: 12.5, cls: 'lim-w-tri' });
     const aText = fill(T.scene.angle, Math.round(d.angle));
-    put(aText, cx + 26, d.angle > 90 ? cy + 22 : cy - 9, { fill: YEL }) || put(aText, cx + 26, d.angle > 90 ? cy - 9 : cy + 22, { fill: YEL });
-    if (tx - cx > 60) put(fill(T.scene.ground, Math.round(state.gr)), mid(cx, tx), air ? corner + (cy > corner ? -6 : 14) : GROUND - 5, { fill: PAPER, size: 12.5, anchor: 'middle' });
+    put(aText, cx + 26, d.angle > 90 ? cy + 22 : cy - 9, { fill: YEL, cls: 'lim-w-tri' }) || put(aText, cx + 26, d.angle > 90 ? cy - 9 : cy + 22, { fill: YEL, cls: 'lim-w-tri' });
+    if (tx - cx > 60) put(fill(T.scene.ground, Math.round(state.gr)), mid(cx, tx), air ? corner + (cy > corner ? -6 : 14) : GROUND - 5, { fill: PAPER, size: 12.5, anchor: 'middle', cls: 'lim-w-tri' });
     if (len > 100) {
       const sx = mid(cx, tx), sy = mid(cy, ty), text = fill(T.scene.slant, Math.round(d.sr)), w = text.length * 7.2, lean = Math.abs(Math.sin(rad(slope)));
-      put(text, sx, sy - 11, { fill: MINT, anchor: 'middle', turn: 'rotate(' + slope.toFixed(1) + ' ' + sx.toFixed(0) + ' ' + sy.toFixed(0) + ')', box: [sx - w / 2 * (1 - lean * .5), sy - 22 - lean * w / 2, w * (1 - lean * .5), 20 + lean * w] });
+      put(text, sx, sy - 11, { fill: MINT, cls: 'lim-w-tri', anchor: 'middle', turn: 'rotate(' + slope.toFixed(1) + ' ' + sx.toFixed(0) + ' ' + sy.toFixed(0) + ')', box: [sx - w / 2 * (1 - lean * .5), sy - 22 - lean * w / 2, w * (1 - lean * .5), 20 + lean * w] });
     }
-    const spot = (rr, ux, uy, text) => [[cx + rr * ux, cy - rr * uy], [cx + rr * .82, cy + rr * .46], [cx + rr * .35, cy - rr * .9]].some((q) => put(text, q[0], q[1], { fill: text === T.scene.see ? MINT : text === T.scene.dot ? '#ff9bd8' : YEL, anchor: 'middle' }));
+    const spot = (rr, ux, uy, text) => [[cx + rr * ux, cy - rr * uy], [cx + rr * .82, cy + rr * .46], [cx + rr * .35, cy - rr * .9]].some((q) => put(text, q[0], q[1], { fill: text === T.scene.see ? MINT : text === T.scene.dot ? '#ff9bd8' : YEL, anchor: 'middle', cls: 'lim-w-rings' }));
     spot(r[0] * .62, .78, .62, T.scene.see);
     spot(mid(r[0], r[1]), .88, .47, air ? T.scene.shedAir : T.scene.shed);
     spot(Math.min(mid(r[1], r[2]), r[1] + 70), .97, .24, T.scene.dot);
     const edgeX = cx + Math.sqrt(Math.max(0, r[2] * r[2] - (cy - 110) * (cy - 110)));
-    if (edgeX < 250) put(T.scene.johnson, edgeX + 8, 114, { fill: '#ff9bd8', size: 11.5 });
-    else put(T.scene.johnson + ' →', 352, 114, { fill: '#ff9bd8', size: 11.5, anchor: 'end' });
+    if (edgeX < 250) put(T.scene.johnson, edgeX + 8, 114, { fill: '#ff9bd8', size: 11.5, cls: 'lim-w-rings lim-w-far' });
+    else put(T.scene.johnson + ' →', 352, 114, { fill: '#ff9bd8', size: 11.5, anchor: 'end', cls: 'lim-w-rings lim-w-far' });
     s += '</g>';
 
-    art.innerHTML = s + stickers(T);
+    art.innerHTML = s + '<g class="lim-stickers">' + stickers(T) + '</g>';
 
     // the invisible things you touch stay in place between redraws, so focus and dragging survive
     const drone = hit('data-drag="drone"'), tgt = hit('data-drag="target"');

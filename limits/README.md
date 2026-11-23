@@ -28,3 +28,5 @@ The budget is how many times a second a small detector (a nano model, 640 px inp
 The weights of the candidates against that small detector are estimates by size, not measurements:
 the big open-vocabulary model 40, the mask network 0.4, frame differencing 0.05. Tiles multiply the cost
 by six for the plain camera. A carrier in flight needs 6 frames per second, a tower needs 2.
+
+The pictures of chapter 02 in the PDF are drawn by this same script: `src/scenes.py` runs `scene.js` in headless Chrome, one state per picture. The layers of the drawing carry class names (`lim-rings`, `lim-frame`, `lim-tri` and others) so that the PDF can dim or hide them.

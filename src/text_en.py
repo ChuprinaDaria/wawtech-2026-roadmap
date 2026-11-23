@@ -54,11 +54,15 @@ CHAPTERS = [
  dict(n=2, layer='ground', title='See like Wolowitz, not like Sheldon', inp='a camera, a board, the weather, a map', out='the limits inside which a model has a chance', pages=[[
     ('why', 'Sheldon derives the theory of everything on a whiteboard. Wolowitz works out whether the bracket survives the launch, and that is why his hardware is the one that flies to space. In vision from a drone, Wolowitz wins: the architecture of the model is chosen last. First physics, optics and geography say what can be seen at all.'),
     ('p', 'Below are the questions worth counting before the first line of code. Every example uses one camera: a frame 1280 px wide, a 60° lens, a height of 100 m, the camera looking straight down. One pixel covers 9 cm of ground.'),
+    ('scene', 'pixels', 'The scene from the [front page of the roadmap](https://chuprinadaria.github.io/wawtech-2026-roadmap/). The discs around the camera show how many pixels are left on the target: 16 and more in the green one, from 8 in the yellow one, from 2 in the pink one. The numbers in the scene are rough, an order of magnitude.'),
     ('h2', 'How many pixels'),
     ('faq', [
         ('How many pixels does it take to see, to recognise and to name?',
          '[Johnson’s criteria](johnson), 1958: a person needs about 2 px across the target to notice it, 8 px to tell a vehicle from a person, and 13 px to name the type. These are thresholds with a 50% probability on a clean image. For a network on a blurred frame, leave a margin.',
          'notice 2 px · recognise 8 px · name 13 px'),
+    ]),
+ ], [
+    ('faq', [
         ('The object is smaller than 6 pixels. What can be done with it at all?',
          'There is no class there, only “something is there”. A box does not work either: a shift of one pixel along both axes leaves an IoU of 0.53, and [the metric notices](nwd-paper). Time helps: the mean of N frames cuts the noise √N times, and motion tells a target from a stone. Look for a [track before a detection](track-before-detect) and a [mask](basicirstd), not a box.',
          'IoU(6 px, shift 1 px) = 25 / 47 = 0.53   ·   noise / √N'),
@@ -66,20 +70,26 @@ CHAPTERS = [
          'Not always. A lens draws a point as a [blob](airy-disk), and a pixel smaller than the blob adds nothing. In visible light at f/2.8 the blob is 3.8 µm. In a thermal camera at f/1.0 it is 24 µm, twice the size of a 12 µm pixel: a thermal sensor sees less than its resolution promises. And count the pixels at the network input, not on the sensor.',
          'd = 2.44 · λ · N'),
     ]),
- ], [
     ('h2', 'Light and air'),
+    ('scene', 'light', 'The same scene at night and in fog. The discs have not moved: the pixels are the same, the contrast is gone.'),
     ('faq', [
         ('It is dark. What breaks first?',
          'From noon to a moonless night there is a hundred million times less [light](lux): 100,000 lx against 0.001. The camera answers with a longer exposure or with gain. The first gives blur, the second [noise](shot-noise): signal to noise grows only as the square root of the number of photons. A [thermal camera](axis-thermal) does not care about the dark, but in the morning and in the evening the target can match the background in temperature and vanish.',
          'SNR = √photons:  10,000 → 100,  100 → 10'),
+    ]),
+ ], [
+    ('faq', [
         ('What smears the frame: speed or rotation?',
          'More often rotation. Flying at 20 m/s with a 1/100 s exposure smears the frame by 2 px. Rolling at 30° per second with the same exposure smears it by 6 px, and height does not help here. That is why a gimbal and a short exposure matter more than the model.',
          'blur = v · t / GSD        blur = ω · t · f'),
+    ]),
+    ('faq', [
         ('Fog and haze: at what distance does the target vanish?',
          'Air eats contrast exponentially. [Meteorological visibility](visibility) V is the distance at which 2% of the contrast is left. At half of that distance 14% is left: with a visibility of 1 km a target at 500 m is already grey on grey. Haze with a visibility of 10 km takes a third of the contrast per kilometre.',
          'C = C0 · exp(−3.912 · d / V)'),
     ]),
     ('h2', 'The platform'),
+    ('scene', 'platform', 'On the left the camera flies at 100 m, on the right it stands on a 30 m tower. From the tower the angle to the same target is almost the horizon.'),
     ('faq', [
         ('A wing or a copter: what does it change for vision?',
          'Time on target. A camera looking down from 100 m sees a strip of 65 m along the track. A wing at 20 m/s crosses it in 3 seconds: 97 frames in all. A copter can hover. A wing also [banks in a turn](banked-turn): a circle of 100 m radius at 20 m/s means 22° of bank, and without a [gimbal](ardupilot-gimbal) the camera axis slides 40 m sideways on the ground.',
@@ -90,16 +100,21 @@ CHAPTERS = [
     ]),
  ], [
     ('h2', 'The lens'),
+    ('scene', 'lens', 'The cone is the frame: everything between its two edge rays. A plain camera on the left, a thermal one on the right: it has fewer pixels, so the discs are tighter.'),
     ('faq', [
         ('A wide lens. Why is everything off at the edges?',
          'Because f · tan θ is honest only for a lens without [distortion](distortion). An ideal 120° lens gives four times more pixels per degree at the edge than in the centre, while a fisheye keeps them equal and bends straight lines. [Calibrate the camera](opencv-calib) and count after the correction: it stretches the edges, but it creates no new pixels.',
          'r = f · tan θ   against   r = f · θ'),
     ]),
     ('h2', 'Ground, map and 3D'),
+    ('scene', 'ground', 'The triangle from question 10: the height H, the ground range, the slant range and the angle from straight down.'),
     ('faq', [
         ('Where on the ground is the thing I see in this pixel?',
          'A point on the ground is the position of the drone plus the height times the tangent of the ray angle. There are three “heights” here: above the take-off point, above sea level and above the GPS ellipsoid, and in Europe the last two differ by [tens of metres](geoid). You need a fourth one, above the ground under the target, and there are [terrain maps](ardupilot-terrain) for it. A height error of 10 m at 60° gives 17 m on the ground. And a compass points at [magnetic north](noaa-declination), not at true north.',
          'GR = H · tan θ'),
+    ]),
+ ], [
+    ('faq', [
         ('Why do distances on a web map lie?',
          'The [Mercator projection](web-mercator) stretches the map more the further you are from the equator. At a latitude of 50° a metre on the map is 1.56 times longer than a real one, and areas are 2.4 times larger. A degree of longitude there is 71.6 km instead of 111.3. Measure in metres on the ground, not in [pixels of the map](osm-zoom).',
          'scale = 1 / cos(latitude)        m/px = 156,543 · cos(latitude) / 2^z'),
@@ -107,13 +122,14 @@ CHAPTERS = [
          'From the same mathematics as Mercator: a curved surface cannot be unfolded onto a plane without stretching, and [Gauss proved it](theorema-egregium). [UV unwrapping](blender-uv) stretches the texture where the surface curves and tears it at the seams. Put the seams where the camera does not look, and check the density: a 2048 px texture on a seven-metre model gives 293 texels per metre, while a camera at 100 m sees 11 px per metre. Pass the render through the same camera you counted: size, blur, noise.',
          'texels per metre = texture size / model size'),
     ]),
- ], [
     ('h2', 'The board'),
+    ('scene', 'board', 'The same scene on three classes of hardware. For the weak one the tiles are already too heavy.'),
     ('faq', [
         ('How many frames per second does the board need?',
          'Enough for the target not to escape the tracker between frames. The ground under a camera at 20 m/s from 100 m moves 7 px per frame at 30 fps and 44 px at 5. Six tiles at 40 ms each make 4 fps. A delay of 200 ms at this speed is 4 m that the drone has already flown. A microcontroller is too small for a network: see [chapter 10](#ch10).',
          'shift = v / (fps · GSD)        fps = 1 / (tiles · network time)'),
     ]),
+ ], [
     ('h2', 'The card of limits: fill it in before you choose an architecture'),
     ('table', 'lim', ('What you counted', 'What it decides'), [
         ('mint', ('Pixels on target', 'The method: a track and a mask, tiles, or an ordinary detector.')),
