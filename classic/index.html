@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The whole picture · Вся картина</title>
+<meta name="description" content="A free roadmap from Python backend to computer vision in defence tech. The handout for a WAWTech 2026 workshop, in English and Ukrainian.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The whole picture">
+<meta property="og:description" content="A free roadmap from Python backend to computer vision in defence tech. English and Ukrainian PDF.">
+<meta property="og:url" content="https://chuprinadaria.github.io/wawtech-2026-roadmap/classic/">
+<link rel="canonical" href="https://chuprinadaria.github.io/wawtech-2026-roadmap/">
+<meta name="theme-color" content="#0d021b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230d021b'/%3E%3Crect x='2.5' y='5.5' width='11' height='8' fill='none' stroke='%2302feb9' stroke-width='1.5'/%3E%3Crect x='1.75' y='2' width='7' height='3.5' fill='%2302feb9'/%3E%3C/svg%3E">
+<link rel="preload" href="../assets/plex-sans-light.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Plex Sans";font-weight:300;font-display:swap;src:url("../assets/plex-sans-light.woff2") format("woff2")}
+@font-face{font-family:"Plex Sans";font-weight:400;font-display:swap;src:url("../assets/plex-sans-regular.woff2") format("woff2")}
+@font-face{font-family:"Plex Mono";font-weight:400;font-display:swap;src:url("../assets/plex-mono-regular.woff2") format("woff2")}
+:root{--ink:#0d021b;--rule:#3a2a5c;--paper:#fdfdfb;--dim:#a39bbd;--mint:#02feb9}
+*{box-sizing:border-box}
+html{background:var(--ink);color-scheme:dark;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;color:var(--paper);font:400 1rem/1.5 "Plex Sans",system-ui,sans-serif}
+main{max-width:35rem;margin:0 auto;padding:1.5rem 1rem 3.5rem}
+h1,p,dl,dd{margin:0}
+.mono{font-family:"Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.69rem;line-height:1.3;letter-spacing:.07em;text-transform:uppercase}
+.kick{color:var(--dim)}
+.kick a{color:var(--mint);text-decoration:none;border-bottom:1px solid var(--mint)}
+
+/* the cover of the PDF: one vehicle the way a detector hands it over */
+.blob{position:relative;margin-top:2.4rem;padding:.9rem}
+.blob::before{content:"";position:absolute;inset:0;border:2px solid var(--mint)}
+.blob svg{display:block;width:100%;height:auto;fill:var(--mint)}
+.tag{position:absolute;left:0;bottom:100%;padding:.25rem .5rem;background:var(--mint);color:var(--ink);white-space:nowrap}
+
+h1{margin-top:1.6rem;font-weight:300;font-size:clamp(2rem,10.4vw,3.6rem);line-height:1.02;letter-spacing:-.02em}
+.sub{margin-top:1rem;max-width:30rem;font-size:1.12rem;line-height:1.35}
+.sub + .sub{margin-top:.55rem}
+
+/* the two files: each one is a detection, the whole box is the link */
+.get{display:grid;gap:2.2rem;margin-top:2.7rem}
+.pdf{position:relative;display:block;padding:1rem 3.2rem 1rem 1rem;border:2px solid var(--mint);color:var(--paper);text-decoration:none}
+.pdf .tag{left:-2px}
+.pdf b{display:block;font-weight:400;font-size:1.55rem;line-height:1.15}
+.pdf .meta{display:block;margin-top:.45rem;color:var(--dim)}
+.pdf::after{content:"\2197";position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--mint);font-size:1.4rem;line-height:1}
+.pdf:hover,.pdf:focus-visible{background:var(--mint);color:var(--ink)}
+.pdf:hover .meta,.pdf:focus-visible .meta,.pdf:hover::after,.pdf:focus-visible::after{color:var(--ink)}
+.pdf:focus-visible{outline:2px solid var(--paper);outline-offset:4px}
+
+.line{margin-top:2.8rem;max-width:30rem;color:var(--dim)}
+.inside{margin-top:1.4rem;border-top:1px solid var(--rule)}
+.inside div{display:grid;grid-template-columns:3.1rem 1fr;column-gap:.6rem;padding:.85rem 0;border-bottom:1px solid var(--rule)}
+.inside dt{padding-top:.14rem;color:var(--mint);font-size:.95rem;letter-spacing:.02em}
+.inside dd span{display:block;color:var(--dim)}
+
+footer{margin-top:2.4rem;font-size:.92rem}
+footer a{color:var(--paper);text-decoration:underline;text-decoration-color:var(--mint);text-underline-offset:.22em}
+footer a:hover,footer a:focus-visible{color:var(--mint)}
+.fine{margin-top:.7rem;font-size:.78rem;line-height:1.45;color:var(--dim)}
+
+@media (min-width:40rem){
+  main{padding-top:3rem}
+}
+/* the box settles on its target, the label follows: once, on load */
+@media (prefers-reduced-motion:no-preference){
+  .blob::before{animation:lock .7s cubic-bezier(.2,.8,.2,1) both}
+  .blob .tag{animation:show .25s .6s both}
+  @keyframes lock{from{opacity:0;transform:scale(1.09)}to{opacity:1;transform:none}}
+  @keyframes show{from{opacity:0}to{opacity:1}}
+}
+</style>
+</head>
+<body>
+<main>
+  <p class="mono kick">WAWTech 2026 · Warsaw · workshop handout · <a href="../">interactive version ↗</a></p>
+
+  <div class="blob" role="img" aria-label="One vehicle the way a model sees it: a flat shape, 415 by 222 pixels">
+    <span class="mono tag">what the model sees: 415 × 222 px</span>
+    <svg viewBox="0 0 2538 1380" aria-hidden="true"><polygon points="24,1094 29,1099 30,1106 33,1109 86,1109 89,1111 90,1148 84,1155 84,1166 90,1173 90,1202 103,1216 182,1217 186,1221 187,1240 211,1264 218,1265 225,1271 236,1271 243,1277 272,1277 279,1271 290,1271 295,1266 304,1264 310,1258 311,1251 317,1244 318,1231 325,1224 332,1223 347,1237 348,1244 353,1249 354,1256 359,1261 360,1268 365,1273 367,1282 376,1284 385,1294 398,1295 403,1300 407,1298 407,1274 412,1272 414,1274 414,1297 417,1301 734,1301 741,1307 1178,1307 1185,1313 1310,1313 1314,1317 1314,1334 1317,1337 1370,1337 1373,1334 1373,1315 1367,1311 1367,1244 1372,1242 1374,1244 1375,1313 1628,1313 1635,1319 1874,1319 1885,1330 1891,1331 1899,1337 1922,1337 1930,1331 1942,1330 1953,1319 1994,1319 2001,1325 2030,1325 2035,1330 2039,1329 2039,1322 2044,1320 2057,1333 2057,1336 2055,1338 2047,1339 2041,1345 2041,1354 2044,1354 2049,1349 2054,1349 2059,1344 2066,1343 2071,1338 2074,1338 2079,1343 2086,1344 2095,1354 2102,1355 2110,1348 2112,1339 2121,1331 2132,1331 2139,1337 2150,1337 2158,1330 2158,1321 2155,1321 2150,1326 2139,1326 2136,1324 2135,1317 2140,1312 2142,1303 2149,1296 2154,1298 2154,1304 2157,1307 2162,1307 2169,1301 2182,1300 2188,1294 2188,1291 2184,1287 2182,1279 2176,1278 2171,1274 2171,1269 2179,1260 2188,1258 2209,1236 2214,1238 2214,1244 2219,1249 2220,1256 2223,1259 2230,1258 2243,1244 2243,1209 2237,1202 2237,1191 2231,1184 2231,1143 2237,1136 2237,1125 2214,1102 2216,1097 2224,1096 2237,1082 2237,1065 2225,1052 2225,1029 2231,1022 2231,1011 2237,1004 2237,993 2234,990 2229,990 2226,988 2225,969 2219,962 2219,921 2213,914 2213,873 2207,866 2207,831 2201,824 2201,783 2195,776 2196,763 2199,761 2438,761 2445,767 2462,767 2469,761 2510,761 2513,758 2513,723 2508,718 2506,709 2500,703 2497,703 2492,708 2487,708 2480,702 2467,703 2466,710 2471,715 2470,719 2467,719 2456,708 2445,708 2438,714 2247,714 2240,708 2193,708 2189,704 2188,691 2171,674 2170,643 2160,634 2158,625 2136,604 2135,597 2130,592 2128,583 2120,576 2103,576 2096,570 2085,570 2078,564 2031,564 2024,558 1971,558 1964,552 1953,552 1946,546 1863,546 1856,540 1503,540 1486,523 1477,521 1462,505 1453,503 1438,487 1429,485 1412,468 1401,468 1394,462 1335,462 1328,456 1292,456 1290,451 1324,418 1324,415 1312,403 1298,402 1296,400 1296,397 1301,392 1301,387 1294,379 1280,378 1276,383 1273,383 1272,379 1277,375 1277,369 1268,360 1261,361 1249,373 1248,380 1243,385 1241,394 1231,403 1230,410 1225,415 1223,424 1216,431 1209,427 1206,428 1206,434 1211,439 1211,442 1209,444 1197,444 1193,440 1192,397 1180,385 1174,384 1168,379 1165,379 1159,384 1155,384 1148,378 1129,377 1127,374 1127,363 1124,360 975,360 972,363 972,374 968,378 927,378 923,374 922,367 913,365 902,354 825,354 818,360 711,360 704,354 698,354 697,358 702,363 702,452 708,459 708,542 714,549 714,638 720,645 720,734 700,755 681,756 676,751 666,748 665,735 659,728 659,651 653,644 653,567 647,560 647,477 641,470 641,387 635,380 635,356 631,355 619,367 618,374 615,377 607,373 601,378 574,378 569,374 568,355 537,354 534,352 533,345 527,337 527,237 521,229 521,135 515,127 515,26 511,25 510,134 516,142 516,248 522,256 521,352 518,354 463,353 461,350 461,296 457,295 455,345 452,348 409,349 402,357 402,380 397,384 391,385 390,391 384,399 384,411 379,413 374,408 343,409 331,421 330,428 325,433 324,440 318,447 318,464 316,467 189,468 186,471 185,478 182,480 135,480 132,483 133,544 172,546 174,549 174,566 170,570 165,570 158,564 147,564 140,558 129,558 124,563 117,564 114,567 114,590 117,593 124,594 131,601 132,608 118,623 109,625 106,635 99,636 96,639 96,680 90,687 90,710 84,717 83,730 80,732 75,732 72,735 72,746 78,753 78,776 72,783 72,806 66,813 66,836 60,843 60,872 54,879 54,908 48,915 48,938 42,945 42,968 36,975 36,992 30,999 30,1022 35,1027 36,1034 30,1041 30,1052 24,1059"/></svg>
+  </div>
+
+  <h1>The whole picture</h1>
+  <p class="sub">A free roadmap from Python backend to computer vision in defence tech.</p>
+  <p class="sub" lang="uk">Безкоштовна дорожня карта з Python-бекенду в комп’ютерний зір для оборонних технологій.</p>
+
+  <nav class="get" aria-label="The roadmap as PDF">
+    <a class="pdf" href="../roadmap-en.pdf" hreflang="en">
+      <span class="mono tag">English</span>
+      <b>The whole picture</b>
+      <span class="mono meta">PDF · 26 pages · 1.6 MB</span>
+    </a>
+    <a class="pdf" href="../roadmap-uk.pdf" hreflang="uk" lang="uk">
+      <span class="mono tag">Українською</span>
+      <b>Вся картина</b>
+      <span class="mono meta">PDF · 26 сторінок · 1,6 МБ</span>
+    </a>
+  </nav>
+
+  <p class="line">A model sees a blob of pixels. An engineer has to see everything that made it, and everything that happens next.</p>
+
+  <dl class="inside">
+    <div>
+      <dt class="mono">128</dt>
+      <dd>free resources, every link opened on 19 November 2026
+        <span lang="uk">безкоштовних ресурсів, кожне посилання відкрито 19 листопада 2026</span></dd>
+    </div>
+    <div>
+      <dt class="mono">14</dt>
+      <dd>chapters, from the lens to the radio link
+        <span lang="uk">розділів, від об’єктива до радіоканалу</span></dd>
+    </div>
+    <div>
+      <dt class="mono">6</dt>
+      <dd>home projects, from a browser to a simulated flight
+        <span lang="uk">домашніх проєктів, від браузера до польоту в симуляторі</span></dd>
+    </div>
+  </dl>
+
+  <footer>
+    <p>Daria Chuprina · <a href="https://www.linkedin.com/in/dchuprina/">LinkedIn</a> · <a href="https://github.com/ChuprinaDaria/wawtech-2026-roadmap">source on GitHub</a></p>
+    <p class="fine">Text and layout: CC BY 4.0. Fonts: IBM Plex, SIL OFL 1.1. The shape is the mask of one vehicle in a synthetic frame. 3D model: “Abrams M1A1 [Free]” by DerpDude, CC BY 4.0.</p>
+  </footer>
+</main>
+</body>
+</html>

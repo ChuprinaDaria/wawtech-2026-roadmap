@@ -57,7 +57,7 @@
     board: { weak: 'weak', mid: 'medium', strong: 'strong' },
     scene: {
       h: 'H {n} m', ground: '{n} m', slant: '{n} m to target', angle: 'angle {n}°', px: '{n} px',
-      see: 'you can tell what it is', shed: 'a tank like a shed', shedAir: 'a drone like a bird', dot: 'a dot', johnson: 'beyond, Johnson says no',
+      see: 'recognisable', shed: 'a tank like a shed', shedAir: 'a drone like a bird', dot: 'a dot', johnson: 'beyond, Johnson says no',
       tapNight: 'tap: night', tapDay: 'tap: day', tapHaze: 'tap: haze', tapFog: 'tap: fog', tapClear: 'tap: clear',
     },
     legend: { a: '16+ px', b: '8–16', c: '2–8', d: 'under 2' },
