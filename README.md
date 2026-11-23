@@ -5,11 +5,16 @@ A free roadmap from Python backend to computer vision in defence tech. The hando
 
 **Read it:** https://chuprinadaria.github.io/wawtech-2026-roadmap/
 
+The front page opens with a small interactive scene, "Limits first": drag the drone and the target, switch the
+camera, the carrier and the hardware, and see which methods survive. The plain page with the two PDFs is the
+[classic version](https://chuprinadaria.github.io/wawtech-2026-roadmap/classic/).
+
 - [English, PDF](roadmap-en.pdf)
 - [Українською, PDF](roadmap-uk.pdf)
 
 «Вся картина»: безкоштовна дорожня карта з Python-бекенду в комп'ютерний зір для оборонних технологій.
-Матеріал до воркшопу на WAWTech 2026.
+Матеріал до воркшопу на WAWTech 2026. На головній сторінці інтерактивна сцена «Спершу межі»: тягни дрон і ціль
+і дивись, які методи доживають.
 
 ## What is inside
 
@@ -21,8 +26,11 @@ how to tell that you are done.
 - 142 free resources, checked on 23 November 2026.
 - One worked calculation: how height, camera angle, lens and telemetry fix the number of pixels on a target,
   and which method fits each number.
+- A chapter on limits, "See like Wolowitz, not like Sheldon": thirteen questions to count before you choose an
+  architecture, from pixels and fog to map projections and frames per second. Its pictures are drawn by the scene
+  of the front page.
 - 15 chapters, from school maths to getting into the field.
-- Six home projects. A Raspberry Pi helps; a laptop with a webcam is enough for most of them.
+- Six home projects. A small single-board computer helps; a laptop with a webcam is enough for most of them.
 
 Coursera is not here on purpose: since August 2025 only the first module of its courses is free.
 
@@ -32,8 +40,8 @@ Open an issue, or write to me on [LinkedIn](https://www.linkedin.com/in/dchuprin
 
 ## Build it yourself
 
-You need Python 3.10 or newer and Google Chrome. The checks also need PyMuPDF and Pillow, and the page
-previews need `pdftoppm` from poppler.
+You need Python 3.10 or newer and Google Chrome. The checks also need PyMuPDF and Pillow, the page previews
+need `pdftoppm` from poppler, and the tests of the scene need Node.js 20 or newer.
 
 ```bash
 cd src
@@ -41,7 +49,11 @@ python3 build.py en uk                         # writes ../roadmap-en.pdf and ..
 python3 check.py resources_core resources_hw   # opens every link
 python3 check_pdf.py en uk                     # checks links, anchors and fonts in the finished PDFs
 ./render.sh en                                 # page previews in src/out/
+node --test ../limits/test.mjs                 # the arithmetic of the scene on the front page
 ```
+
+The pictures of chapter 2 are not stored anywhere: `build.py` starts Chrome once more per language and lets
+`limits/scene.js` draw them, so the PDF and the front page cannot disagree.
 
 | File | What it holds |
 |---|---|
@@ -49,7 +61,9 @@ python3 check_pdf.py en uk                     # checks links, anchors and fonts
 | `src/text_en.py`, `src/text_uk.py` | the chapters in two languages |
 | `src/figures.py` | the figures; every number in them is computed from one camera model |
 | `src/build.py`, `src/style.css` | the pages as HTML, printed to PDF by headless Chrome |
-| `index.html` | the page behind the QR code |
+| `src/scenes.py` | the pictures of chapter 2: which state of the scene each of them shows |
+| `index.html`, `limits/` | the page behind the QR code and its scene: the model, the words in two languages, the drawing, the tests. Where the numbers come from: [limits/README.md](limits/README.md) |
+| `classic/index.html` | the plain front page, without the scene |
 
 A few sites refuse automated requests and answer 403 to `check.py`: OpenCV, the Raspberry Pi
 documentation, Edmund Optics, Basler, NovAtel, Roboflow, Blender. Open those by hand.
@@ -62,4 +76,5 @@ Share it, translate it, rebuild it for your own field, and keep the credit. Deta
 - Fonts: IBM Plex, SIL Open Font License 1.1, see `src/fonts/OFL.txt`.
 - The shape on the cover is the mask of one vehicle in a synthetic frame. 3D model: "Abrams M1A1 [Free]"
   by DerpDude, CC BY 4.0.
+- The photo on the cover is the author's own, in the conference's "I am going to WAWTech" frame.
 - The linked resources belong to their authors.
