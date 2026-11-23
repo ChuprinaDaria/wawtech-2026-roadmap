@@ -46,7 +46,7 @@ h2{font:500 6.4pt/1 "Plex Mono";letter-spacing:.06em;color:var(--dim);text-trans
 .res.start{border:.3mm solid var(--mint);padding:1.9mm 2mm 1.8mm;margin:5.4mm 0 1mm}
 .res.start + .res{border-top:0}
 .tag{position:absolute;left:-.3mm;top:-3.5mm;height:3.5mm;padding:0 1.4mm;font:500 5.6pt/3.5mm "Plex Mono";letter-spacing:.04em;background:var(--mint);color:var(--ink);white-space:nowrap}
-.cost{font:500 5.4pt/1 "Plex Mono";letter-spacing:.05em;align-self:start;margin-top:.9mm;padding:1mm 0;text-align:center;border:.25mm solid currentColor}
+.cost{font:500 5.4pt/1 "Plex Mono";letter-spacing:0;align-self:start;margin-top:.9mm;padding:1mm 0;text-align:center;border:.25mm solid currentColor}
 .cost.free{color:var(--mint)} .cost.freemium{color:var(--violet)} .cost.audit{color:var(--pink)}
 .res .t{font-weight:500;font-size:10pt;line-height:1.22;display:block}
 .res .prov{display:block;font:400 5.6pt/1.35 "Plex Mono";letter-spacing:.04em;color:var(--dim);text-transform:uppercase;margin-top:.7mm}
