@@ -296,7 +296,7 @@ CREDITS = dict(eyebrow='SMALL PRINT', title='Credits', blocks=[
     ('p', 'Found a dead link, or a better resource? Tell me: [linkedin.com/in/dchuprina](https://www.linkedin.com/in/dchuprina/).'),
     ('p', 'The latest version and the source files: [chuprinadaria.github.io/wawtech-2026-roadmap](https://chuprinadaria.github.io/wawtech-2026-roadmap/).'),
     ('h2', 'Thank you'),
-    ('p', 'To the CV + ML department at BBTech, and above all to the head of the Software R&D department and the head of the CV & ML section, [Anar Lavrenov](https://ua.linkedin.com/in/anar-lavrenov), for the science. To the whole open-source community, and to everyone who adds to it, however small. And to all the people with unpronounceable surnames whose dissertations and papers I read through long nights.'),
+    ('p', 'To the CV + ML department at BBTech. To the head of the Software R&D department. To [Anar Lavrenov](https://ua.linkedin.com/in/anar-lavrenov), head of the CV & ML section, for the science. To the whole open-source community, and to everyone who adds to it, however small. And to all the people with unpronounceable surnames whose dissertations and papers I read through long nights.'),
     ('h2', 'What is not here'),
     ('p', 'Paid courses, programmes that only companies can join, and anything I could not open. Work datasets, work models and work footage are not here either, and they will not be. This is MilTech, baby 😏'),
 ])

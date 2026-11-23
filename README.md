@@ -8,7 +8,7 @@ A free roadmap from Python backend to computer vision in defence tech. The hando
 - [English, PDF](roadmap-en.pdf)
 - [Українською, PDF](roadmap-uk.pdf)
 
-«Уся картина»: безплатна дорожня карта з Python-бекенду в комп'ютерний зір для оборонних технологій.
+«Вся картина»: безкоштовна дорожня карта з Python-бекенду в комп'ютерний зір для оборонних технологій.
 Матеріал до воркшопу на WAWTech 2026.
 
 ## What is inside
