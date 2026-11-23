@@ -142,7 +142,15 @@ table.t{width:100%;border-collapse:collapse;margin-top:3mm;font-size:8.2pt;line-
 .t tr.pink td:first-child{color:var(--pink)} .t tr.violet td:first-child{color:var(--violet)} .t tr.mint td:first-child{color:var(--mint)}
 .t td a{color:var(--mint);border-bottom:.2mm solid var(--mint)}
 .p a.in,.why a.in{color:var(--mint);border-bottom:.2mm solid var(--mint)}
-.t.src,.t.boards{table-layout:fixed}
+.t.src,.t.boards,.t.lim{table-layout:fixed}
+.t.lim th:nth-child(1){width:46mm}
+.faq{margin-top:1.6mm}
+.faq>div{display:grid;grid-template-columns:6mm 1fr;padding:1.5mm 0 1.4mm;border-top:.2mm solid var(--rule)}
+.faq i{font:500 6.2pt/2.05 "Plex Mono";font-style:normal;color:var(--mint)}
+.faq b{display:block;font-weight:500;font-size:9pt;line-height:1.3}
+.faq .a{display:block;margin-top:.7mm;font-size:8.3pt;line-height:1.36;color:#d9d4ea}
+.faq .a a.in{color:var(--mint);border-bottom:.2mm solid var(--mint)}
+.faq .f{display:block;margin-top:1mm;font:500 7.4pt/1.4 "Plex Sans";letter-spacing:.02em;color:var(--mint);white-space:pre-wrap}
 .t.src th:nth-child(1){width:25mm} .t.src th:nth-child(2){width:53mm}
 .t.boards th:nth-child(1){width:25mm} .t.boards th:nth-child(2){width:28mm} .t.boards th:nth-child(3){width:42mm}
 .t td{overflow-wrap:break-word}

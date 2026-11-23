@@ -87,6 +87,13 @@ class Doc:
             head = ''.join(f'<th>{e(h)}</th>' for h in b[2])
             rows = ''.join(f'<tr class="{cls}">' + ''.join(f'<td>{rich(c)}</td>' for c in cells) + '</tr>' for cls, cells in b[3])
             return f'<table class="t {b[1]}"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table>'
+        if k == 'faq':
+            out = []
+            for q, a, f in b[1]:
+                self.qn += 1
+                formula = f'<span class="f mono">{e(f)}</span>' if f else ''
+                out.append(f'<div><i class="mono">{self.qn:02d}</i><span><b>{e(q)}</b><span class="a">{rich(a)}</span>{formula}</span></div>')
+            return '<div class="faq">' + ''.join(out) + '</div>'
         raise ValueError(k)
 
     def bar(self, current=None):
@@ -121,20 +128,24 @@ class Doc:
         boxes.update({8: (0, ys[1], 29, H, 'ground'), 9: (0, ys[2], 29, H, 'ground'), 13: (98, ys[3], 28, H, 'air'),
                       3: (0, 114, 40, H, 'base'), 4: (43, 114, 40, H, 'base'), 11: (86, 114, 40, H, 'base'),
                       15: (0, 134, 61.5, H, 'you'), 16: (64.5, 134, 61.5, H, 'you')})
+        limits = 2 in T.MAP                                            # the chapter on limits sits on top of the ground column
+        if limits: boxes[2] = (0, ys[0], 29, H, 'ground')
         out = []
         ar = lambda x1, y1, x2, y2: f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="#a39bbd" stroke-width=".25" marker-end="url(#a)"/>'
         lines = [ar(65.5, ys[i] + H, 65.5, ys[i + 1] - .6) for i in range(4)] + [ar(65.5, ys[4] + H, 65.5, ys[4] + H + G - .6),
                  ar(14.5, ys[1] + H, 14.5, ys[2] - .6), ar(29, ys[2] + H / 2, 41.4, ys[2] + H / 2), ar(98, ys[3] + H / 2, 89.6, ys[3] + H / 2)]
+        if limits: lines.append(ar(14.5, ys[0] + H, 14.5, ys[1] - .6))
         out.append(f'<svg viewBox="0 0 126 147"><defs><marker id="a" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#a39bbd"/></marker></defs>{"".join(lines)}</svg>')
         fy, fh = 2, ys[4] + H + G + 9 - 2
         out.append(f'<a class="frame" href="#ch14" style="left:39mm;top:{fy}mm;width:53mm;height:{fh}mm"><span class="tag">14 · {e(T.MAP[14][0].lower())}</span></a>')
         L = self.M['layers']
-        for txt, x, y in ((L['air'], 42, 5.2), (L['ground'], 0, ys[1] - 7.2), (L['base'], 0, 108.6), (L['you'], 0, 128.6)):
+        for txt, x, y in ((L['air'], 42, 5.2), (L['ground'], 0, 5.2 if limits else ys[1] - 7.2), (L['base'], 0, 108.6), (L['you'], 0, 128.6)):
             out.append(f'<span class="lay" style="left:{x}mm;top:{y}mm">{e(txt)}</span>')
         F = T.FLOW
         for txt, x, y in ((F[0], 67.5, ys[0] + H + 1.6), (F[1], 67.5, ys[1] + H + 1.6), (F[2], 67.5, ys[2] + H + 1.6), (F[3], 67.5, ys[3] + H + 1.6), (F[4], 67.5, ys[4] + H + 1.6),
                           (F[5], 16.5, ys[1] + H + 1.6), (F[6], 29.6, ys[2] + H / 2 - 3.3), (F[7], 92.4, ys[3] + H / 2 - 3.3)):
             out.append(f'<span class="flow" style="left:{x}mm;top:{y}mm">{e(txt)}</span>')
+        if limits: out.append(f'<span class="flow" style="left:16.5mm;top:{ys[0] + H + 1.6}mm">{e(F[8])}</span>')
         out.append(f'<div class="oper" style="left:42mm;top:{ys[4] + H + G + .6}mm;width:47mm">{e(T.OPERATOR[0])}<span>{e(T.OPERATOR[1])}</span></div>')
         for n, (x, y, w, h, cls) in boxes.items():
             name, sub = T.MAP[n]
@@ -143,7 +154,7 @@ class Doc:
         self.page(head + f'<div class="map">{"".join(out)}</div>', pid='map')
 
     def chapter(self, c):
-        L = self.M['layers']; ui = self.M['ui']
+        L = self.M['layers']; ui = self.M['ui']; self.qn = 0          # questions are numbered through the chapter
         for i, blocks in enumerate(c['pages']):
             body = ''
             if i == 0:
