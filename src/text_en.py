@@ -10,9 +10,9 @@ META = dict(
     cover_tag='what the model sees: {w} × {h} px',
     cover_line='A model sees a blob of pixels. An engineer has to see everything that made it, and everything that happens next.',
     author='Daria Chuprina', role='Computer Vision Engineer',
-    version='Version 1 · every link opened on 19 November 2026',
+    version='Version 2 · 23 November 2026',
     other='Українською', other_url='https://chuprinadaria.github.io/wawtech-2026-roadmap/roadmap-uk.pdf',
-    foot='THE WHOLE PICTURE · V1 · 19 NOV 2026', map='MAP',
+    foot='THE WHOLE PICTURE · V2 · 23 NOV 2026', map='MAP',
     ui=dict(start='start here', home='at home', done='DONE WHEN', inp='IN', out='OUT', also='ALSO', need='YOU NEED',
             build='BUILD', proof='PROOF', see='READ', cont='continued'),
     cost=dict(free='FREE', freemium='FREE TIER', audit='AUDIT'),
@@ -23,13 +23,13 @@ META = dict(
 
 MAPHEAD = ('The map', 'The eye of a small drone is a chain. If one link is weak, the model at the end sees nothing. '
                       'Every block is a chapter: tap it.')
-MAP = {3: ('Maths', 'reading a score'), 4: ('Arrays', 'an image is numbers'), 5: ('Light, lens, sensor', 'how many pixels the target gets'),
+MAP = {2: ('Limits first', 'count before you design'), 3: ('Maths', 'reading a score'), 4: ('Arrays', 'an image is numbers'), 5: ('Light, lens, sensor', 'how many pixels the target gets'),
        6: ('Classic vision', 'edges, motion, geometry'), 7: ('Deep learning', 'a prediction with a probability'),
        8: ('Data', 'three legal sources'), 9: ('Training', 'weights and metrics'), 10: ('On the board', 'frames per second on a few watts'),
        11: ('Electronics, the Pi', 'a board that sees and talks'), 12: ('Telemetry and link', 'a message that arrives'),
        13: ('Navigation', 'where it is'), 14: ('The whole system', ''), 15: ('Six home projects', 'from a browser to a simulated flight'),
        16: ('Getting in', 'jobs, hackathons, the rules')}
-FLOW = ['a frame', 'a clean frame', 'a model, made small', 'a detection', 'a message', 'a dataset', 'weights', 'pose']
+FLOW = ['a frame', 'a clean frame', 'a model, made small', 'a detection', 'a message', 'a dataset', 'weights', 'pose', 'limits']
 OPERATOR = ('A person decides', 'THE OPERATOR')
 
 HOW = dict(eyebrow='HOW TO USE THIS', title='How I learned, and how to read this map', blocks=[
@@ -51,6 +51,84 @@ HOW = dict(eyebrow='HOW TO USE THIS', title='How I learned, and how to read this
 ])
 
 CHAPTERS = [
+ dict(n=2, layer='ground', title='See like Wolowitz, not like Sheldon', inp='a camera, a board, the weather, a map', out='the limits inside which a model has a chance', pages=[[
+    ('why', 'Sheldon derives the theory of everything on a whiteboard. Wolowitz works out whether the bracket survives the launch, and that is why his hardware is the one that flies to space. In vision from a drone, Wolowitz wins: the architecture of the model is chosen last. First physics, optics and geography say what can be seen at all.'),
+    ('p', 'Below are the questions worth counting before the first line of code. Every example uses one camera: a frame 1280 px wide, a 60° lens, a height of 100 m, the camera looking straight down. One pixel covers 9 cm of ground.'),
+    ('h2', 'How many pixels'),
+    ('faq', [
+        ('How many pixels does it take to see, to recognise and to name?',
+         '[Johnson’s criteria](johnson), 1958: a person needs about 2 px across the target to notice it, 8 px to tell a vehicle from a person, and 13 px to name the type. These are thresholds with a 50% probability on a clean image. For a network on a blurred frame, leave a margin.',
+         'notice 2 px · recognise 8 px · name 13 px'),
+        ('The object is smaller than 6 pixels. What can be done with it at all?',
+         'There is no class there, only “something is there”. A box does not work either: a shift of one pixel along both axes leaves an IoU of 0.53, and [the metric notices](nwd-paper). Time helps: the mean of N frames cuts the noise √N times, and motion tells a target from a stone. Look for a [track before a detection](track-before-detect) and a [mask](basicirstd), not a box.',
+         'IoU(6 px, shift 1 px) = 25 / 47 = 0.53   ·   noise / √N'),
+        ('Will a camera with more megapixels save me?',
+         'Not always. A lens draws a point as a [blob](airy-disk), and a pixel smaller than the blob adds nothing. In visible light at f/2.8 the blob is 3.8 µm. In a thermal camera at f/1.0 it is 24 µm, twice the size of a 12 µm pixel: a thermal sensor sees less than its resolution promises. And count the pixels at the network input, not on the sensor.',
+         'd = 2.44 · λ · N'),
+    ]),
+ ], [
+    ('h2', 'Light and air'),
+    ('faq', [
+        ('It is dark. What breaks first?',
+         'From noon to a moonless night there is a hundred million times less [light](lux): 100,000 lx against 0.001. The camera answers with a longer exposure or with gain. The first gives blur, the second [noise](shot-noise): signal to noise grows only as the square root of the number of photons. A [thermal camera](axis-thermal) does not care about the dark, but in the morning and in the evening the target can match the background in temperature and vanish.',
+         'SNR = √photons:  10,000 → 100,  100 → 10'),
+        ('What smears the frame: speed or rotation?',
+         'More often rotation. Flying at 20 m/s with a 1/100 s exposure smears the frame by 2 px. Rolling at 30° per second with the same exposure smears it by 6 px, and height does not help here. That is why a gimbal and a short exposure matter more than the model.',
+         'blur = v · t / GSD        blur = ω · t · f'),
+        ('Fog and haze: at what distance does the target vanish?',
+         'Air eats contrast exponentially. [Meteorological visibility](visibility) V is the distance at which 2% of the contrast is left. At half of that distance 14% is left: with a visibility of 1 km a target at 500 m is already grey on grey. Haze with a visibility of 10 km takes a third of the contrast per kilometre.',
+         'C = C0 · exp(−3.912 · d / V)'),
+    ]),
+    ('h2', 'The platform'),
+    ('faq', [
+        ('A wing or a copter: what does it change for vision?',
+         'Time on target. A camera looking down from 100 m sees a strip of 65 m along the track. A wing at 20 m/s crosses it in 3 seconds: 97 frames in all. A copter can hover. A wing also [banks in a turn](banked-turn): a circle of 100 m radius at 20 m/s means 22° of bank, and without a [gimbal](ardupilot-gimbal) the camera axis slides 40 m sideways on the ground.',
+         't = footprint / v        tan(bank) = v² / (g · R)'),
+        ('The drone tilted. What happened to my pixel formula?',
+         'The angle from nadir changed, and everything with it. Roll and pitch from the [telemetry](mavlink-common) must be added to the mounting angle of the camera, or the map from [chapter 5](#ch05) shows the wrong frame. The price of an error grows towards the horizon: one degree of error from 100 m moves the point on the ground by 1.7 m under the drone and by 7 m at 60°.',
+         'Δ = H · Δθ / cos²θ'),
+    ]),
+ ], [
+    ('h2', 'The lens'),
+    ('faq', [
+        ('A wide lens. Why is everything off at the edges?',
+         'Because f · tan θ is honest only for a lens without [distortion](distortion). An ideal 120° lens gives four times more pixels per degree at the edge than in the centre, while a fisheye keeps them equal and bends straight lines. [Calibrate the camera](opencv-calib) and count after the correction: it stretches the edges, but it creates no new pixels.',
+         'r = f · tan θ   against   r = f · θ'),
+    ]),
+    ('h2', 'Ground, map and 3D'),
+    ('faq', [
+        ('Where on the ground is the thing I see in this pixel?',
+         'A point on the ground is the position of the drone plus the height times the tangent of the ray angle. There are three “heights” here: above the take-off point, above sea level and above the GPS ellipsoid, and in Europe the last two differ by [tens of metres](geoid). You need a fourth one, above the ground under the target, and there are [terrain maps](ardupilot-terrain) for it. A height error of 10 m at 60° gives 17 m on the ground. And a compass points at [magnetic north](noaa-declination), not at true north.',
+         'GR = H · tan θ'),
+        ('Why do distances on a web map lie?',
+         'The [Mercator projection](web-mercator) stretches the map more the further you are from the equator. At a latitude of 50° a metre on the map is 1.56 times longer than a real one, and areas are 2.4 times larger. A degree of longitude there is 71.6 km instead of 111.3. Measure in metres on the ground, not in [pixels of the map](osm-zoom).',
+         'scale = 1 / cos(latitude)        m/px = 156,543 · cos(latitude) / 2^z'),
+        ('A 3D model for synthetic data: where do the warped surface and the torn texture come from?',
+         'From the same mathematics as Mercator: a curved surface cannot be unfolded onto a plane without stretching, and [Gauss proved it](theorema-egregium). [UV unwrapping](blender-uv) stretches the texture where the surface curves and tears it at the seams. Put the seams where the camera does not look, and check the density: a 2048 px texture on a seven-metre model gives 293 texels per metre, while a camera at 100 m sees 11 px per metre. Pass the render through the same camera you counted: size, blur, noise.',
+         'texels per metre = texture size / model size'),
+    ]),
+ ], [
+    ('h2', 'The board'),
+    ('faq', [
+        ('How many frames per second does the board need?',
+         'Enough for the target not to escape the tracker between frames. The ground under a camera at 20 m/s from 100 m moves 7 px per frame at 30 fps and 44 px at 5. Six tiles at 40 ms each make 4 fps. A delay of 200 ms at this speed is 4 m that the drone has already flown. A microcontroller is too small for a network: see [chapter 10](#ch10).',
+         'shift = v / (fps · GSD)        fps = 1 / (tiles · network time)'),
+    ]),
+    ('h2', 'The card of limits: fill it in before you choose an architecture'),
+    ('table', 'lim', ('What you counted', 'What it decides'), [
+        ('mint', ('Pixels on target', 'The method: a track and a mask, tiles, or an ordinary detector.')),
+        ('mint', ('Blur and noise', 'The exposure, the need for a gimbal, and which augmentations are honest.')),
+        ('mint', ('Contrast in fog and in the dark', 'The camera, and the conditions the dataset must hold.')),
+        ('mint', ('Time on target, frames per second', 'The input size, the number of tiles and the board.')),
+        ('mint', ('Error of the point on the ground', 'What you can promise the operator.')),
+        ('mint', ('Projection and heights', 'How to stitch detections to the map.')),
+        ('mint', ('Unwrapping and texture density', 'Whether the 3D model suits this height.')),
+    ]),
+    ('box', 'pink', 'the order', 'Limits first, then data, then the model. If the target has 5 px, the best detector will not help. If it has 40, a simple one is enough.'),
+    ('also', [('When the sun is low and shadows are long: the NOAA calculator', 'noaa-solcalc'), ('Blender', 'blender')]),
+    ('home', 'Take your calculator from [chapter 5](#ch05) and add four lines: blur from speed, blur from rotation, contrast from visibility, time on target. Fill in the card of limits for one camera and two flight profiles: a wing at 100 m and a copter at 30 m. Then [play with the limits](https://chuprinadaria.github.io/wawtech-2026-roadmap/) on the front page.'),
+    ('done', 'You have one page of numbers that shows which method makes sense, before the first labelled frame.'),
+ ]]),
  dict(n=3, layer='base', title='The maths you actually use', inp='school maths, half forgotten', out='reading a score, a matrix, a loss curve', pages=[[
     ('why', 'A detector does not say “tank”. It says 0.88. Reading that number, a loss curve or a camera matrix takes school probability and a little linear algebra. Not a degree.'),
     ('list', [('start', '3b1b-la', 'Vectors, matrices and transforms as moving pictures. Watch it before you meet a single formula.'),

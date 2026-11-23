@@ -93,7 +93,7 @@ test('one verdict for every situation', () => {
   assert.equal(key({ air: 'fog' }), 'fog');
   assert.equal(key({ camera: 'thermal', h: 200, gr: 600 }), 'johnson');
   assert.equal(key({ camera: 'thermal', h: 100, gr: 283 }), 'smear');
-  assert.deepEqual(L.verdict(st({ carrier: 'tower', board: 'weak', h: 30, gr: 30 })), { key: 'board', name: 'tiles' });
+  assert.deepEqual(L.verdict(st({ board: 'weak', gr: 250 })), { key: 'board', name: 'tiles' });
   assert.equal(key({ camera: 'thermal', carrier: 'tower', h: 30, gr: 350 }), 'dot');
   assert.equal(key({}), 'noclass');
   assert.equal(key({ gr: 250 }), 'shed');

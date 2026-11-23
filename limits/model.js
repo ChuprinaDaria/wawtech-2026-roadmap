@@ -16,8 +16,8 @@
     fly:   { speed: 15, shake: 20, needFps: 6, hMin: 20, hMax: 300 },
     tower: { speed: 0,  shake: 0,  needFps: 2, hMin: 5,  hMax: 50 },
   };
-  // how many times a second a small detector runs on one tile
-  const BOARDS = { weak: 8, mid: 40, strong: 100 };
+  // how many times a second a small detector runs on one tile; where the numbers come from: limits/README.md
+  const BOARDS = { weak: 15, mid: 40, strong: 200 };
   const AIR = { clear: 20000, haze: 4000, fog: 400 };            // meteorological visibility, metres
   const TARGET = { ground: 1.8, air: 0.35, airFrom: 5 };         // narrow side in metres; above airFrom it flies
   const SCENE = { range: 600, ceiling: 300, nearest: 20 };

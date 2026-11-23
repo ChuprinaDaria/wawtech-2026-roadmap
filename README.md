@@ -18,10 +18,10 @@ a radio link, a person who decides. The roadmap follows that chain. Every block 
 a chapter, and every chapter has the same shape: why it matters, where to read, what to build at home,
 how to tell that you are done.
 
-- 128 free resources. Every link was opened on 19 November 2026.
+- 142 free resources, checked on 23 November 2026.
 - One worked calculation: how height, camera angle, lens and telemetry fix the number of pixels on a target,
   and which method fits each number.
-- 14 chapters, from school maths to getting into the field.
+- 15 chapters, from school maths to getting into the field.
 - Six home projects. A Raspberry Pi helps; a laptop with a webcam is enough for most of them.
 
 Coursera is not here on purpose: since August 2025 only the first module of its courses is free.
