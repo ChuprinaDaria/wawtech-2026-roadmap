@@ -21,9 +21,9 @@ The budget is how many times a second a small detector (a nano model, 640 px inp
 
 | Class | Budget | Where it comes from |
 |---|---|---|
-| weak: a processor, no accelerator | 15 | measured: 67 ms per image with NCNN on a single-board computer, [Ultralytics deployment guides](https://docs.ultralytics.com/guides/) |
+| weak: a processor, no accelerator | 15 | measured: 67 ms per image with NCNN on a single-board computer, [Ultralytics deployment guides](https://docs.ultralytics.com/guides) |
 | medium: a neural accelerator | 40 | an estimate between the two measured classes; vendors of such chips quote from 20 to over 100 |
-| strong: a graphics module | 200 | measured: 1.4 to 4.6 ms per image with TensorRT FP16, [Ultralytics deployment guides](https://docs.ultralytics.com/guides/) |
+| strong: a graphics module | 200 | measured: 1.4 to 4.6 ms per image with TensorRT FP16, [Ultralytics deployment guides](https://docs.ultralytics.com/guides) |
 
 The weights of the candidates against that small detector are estimates by size, not measurements:
 the big open-vocabulary model 40, the mask network 0.4, frame differencing 0.05. Tiles multiply the cost
