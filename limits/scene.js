@@ -13,6 +13,11 @@
 
   // the scene in its own units: 0.55 of a unit per metre, the same along both axes
   const X0 = 30, GROUND = 255, K = 0.55;
+  // The picture is 378 units wide. data-view asks for a wider one, grown to the right: the talk shows the scene
+  // as a strip. The target may then go as far as the picture does; the sun and the cloud move to its right edge.
+  const VIEW = Math.max(378, +root.dataset.view || 378), MORE = VIEW - 378, RIGHT = VIEW - 18;
+  const FAR = Math.max(720, (RIGHT + 40 - X0) / K);            // metres: beyond the right edge of the picture
+  if (MORE) L.SCENE.range = Math.floor((RIGHT - X0) / K);
   const X = (m) => X0 + K * m, Y = (m) => GROUND - K * m;
   const MINT = '#02feb9', PINK = '#ff00aa', YEL = '#ffd84a', PAPER = '#fdfdfb', INK = '#0d021b', GREY = '#8d86a8', HEAT = '#ff8a3d';
   const NEXT = { camera: ['plain', 'thermal'], carrier: ['fly', 'tower'], board: ['weak', 'mid', 'strong'], air: ['clear', 'haze', 'fog'] };
@@ -25,18 +30,18 @@
   root.innerHTML =
     '<p class="lim-hint"></p>' +
     '<div class="lim-stage"><div class="lim-scene">' +
-    '<svg viewBox="-18 0 378 330" role="group"><defs>' +
+    '<svg viewBox="-18 0 ' + VIEW + ' 330" role="group"><defs>' +
     '<linearGradient id="lim-day" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1470"/><stop offset=".75" stop-color="#5b3fd0"/><stop offset="1" stop-color="#8a6cff"/></linearGradient>' +
     '<linearGradient id="lim-night" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05010d"/><stop offset="1" stop-color="#1b0f45"/></linearGradient>' +
     '<pattern id="lim-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="7" stroke="#fdfdfb" stroke-opacity=".28" stroke-width="1.4"/></pattern>' +
     '<pattern id="lim-grass" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M1,6 l2,-5 M5,6 l1,-4" stroke="#0f7a4f" stroke-width="1.2" fill="none"/></pattern>' +
-    '<clipPath id="lim-above"><rect x="-18" y="0" width="378" height="255"/></clipPath>' +
+    '<clipPath id="lim-above"><rect x="-18" y="0" width="' + VIEW + '" height="255"/></clipPath>' +
     '<filter id="lim-pen"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>' +
     '</defs><g class="lim-art"></g><g class="lim-ui">' +
     '<circle class="lim-hit" data-drag="drone" r="24" tabindex="0" role="slider" aria-valuemin="5" aria-valuemax="300"/>' +
     '<circle class="lim-hit" data-drag="target" r="24" tabindex="0" role="slider" aria-valuemin="20" aria-valuemax="600"/>' +
-    '<circle class="lim-hit" data-act="sun" cx="314" cy="42" r="30" tabindex="0" role="button"/>' +
-    '<rect class="lim-hit" data-act="cloud" x="168" y="14" width="78" height="66" rx="14" tabindex="0" role="button"/>' +
+    '<circle class="lim-hit" data-act="sun" cx="' + (314 + MORE) + '" cy="42" r="30" tabindex="0" role="button"/>' +
+    '<rect class="lim-hit" data-act="cloud" x="' + (168 + MORE) + '" y="14" width="78" height="66" rx="14" tabindex="0" role="button"/>' +
     '<rect class="lim-hit" data-act="camera" x="-12" y="277" width="118" height="46" rx="23" tabindex="0" role="button"/>' +
     '<rect class="lim-hit" data-act="carrier" x="110" y="277" width="112" height="46" rx="23" tabindex="0" role="button"/>' +
     '<rect class="lim-hit" data-act="board" x="226" y="277" width="130" height="46" rx="23" tabindex="0" role="button"/>' +
@@ -51,7 +56,7 @@
   function edge(angle) {
     const dx = Math.sin(rad(angle)), dy = -Math.cos(rad(angle)), out = [];
     if (dy < 0) out.push([state.h / -dy, 0]);            // the ground
-    if (dx > 0) out.push([720 / dx, 1]);                 // the right side
+    if (dx > 0) out.push([FAR / dx, 1]);                 // the right side
     if (dy > 0) out.push([(520 - state.h) / dy, 2]);     // the top
     if (dx < 0) out.push([100 / -dx, 3]);                // the left side
     out.sort((a, b) => a[0] - b[0]);
@@ -60,7 +65,7 @@
 
   function coneShape() {
     const c = L.cone(state), lo = edge(c.lo), hi = edge(c.hi);
-    const corner = { 3: [-100, 0], 0: [720, 0], 1: [720, 520] }, after = { 3: 0, 0: 1, 1: 2 };
+    const corner = { 3: [-100, 0], 0: [FAR, 0], 1: [FAR, 520] }, after = { 3: 0, 0: 1, 1: 2 };
     const pts = [[0, state.h], [lo.x, lo.y]];
     for (let s = lo.side; s !== hi.side && s in corner; s = after[s]) pts.push(corner[s]);
     pts.push([hi.x, hi.y]);
@@ -102,9 +107,9 @@
   }
 
   function sky(T) {
-    let s = '';
+    let s = '', stars = '';
     if (state.night) {
-      s += [[60, 30], [120, 62], [150, 24], [250, 30], [275, 84], [96, 96], [200, 100], [338, 104], [20, 70]].map((p) => '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="1.1" fill="' + PAPER + '" opacity=".8"/>').join('');
+      for (let dx = 0; dx <= MORE; dx += 378) stars += [[60, 30], [120, 62], [150, 24], [250, 30], [275, 84], [96, 96], [200, 100], [338, 104], [20, 70]].map((p) => '<circle cx="' + (p[0] + dx) + '" cy="' + p[1] + '" r="1.1" fill="' + PAPER + '" opacity=".8"/>').join('');
       s += '<circle cx="314" cy="42" r="17" fill="#fdf3c4"/><circle cx="322" cy="36" r="15" fill="#0b0420"/>' +
         '<circle cx="305" cy="40" r="1.6" fill="' + INK + '"/><path d="M301,48 q4,3 8,0" stroke="' + INK + '" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
     } else {
@@ -118,7 +123,7 @@
     const tapAir = { clear: T.scene.tapHaze, haze: T.scene.tapFog, fog: T.scene.tapClear }[state.air];
     s += '<g class="lim-t lim-tap" font-size="10.5" text-anchor="middle"><text x="314" y="88" fill="' + (state.night ? '#fdf3c4' : YEL) + '">' + esc(tapSun) + '</text>' +
       '<text x="206" y="' + (state.air === 'clear' ? 70 : 90) + '" fill="' + PAPER + '">' + esc(tapAir) + '</text></g>';
-    return s;
+    return stars + (MORE ? '<g transform="translate(' + MORE + ' 0)">' + s + '</g>' : s);
   }
 
   function stickers(T) {
@@ -137,7 +142,7 @@
     const T = TEXT[lang], d = L.derive(state), air = d.target === 'air';
     const cx = X0, cy = Y(state.h), tx = X(state.gr), ty = Y(state.alt);
     const r = L.rings(state).map((m) => m * K), cone = coneShape();
-    let s = '<rect x="-18" y="0" width="378" height="330" fill="url(#lim-' + (state.night ? 'night' : 'day') + ')"/>';
+    let s = '<rect x="-18" y="0" width="' + VIEW + '" height="330" fill="url(#lim-' + (state.night ? 'night' : 'day') + ')"/>';
 
     // how many pixels the target still gets at this distance: three discs around the camera
     s += '<g clip-path="url(#lim-above)"><g class="lim-rings">' +
@@ -163,7 +168,7 @@
       (flat || tx - cx < 16 ? '' : '<path d="M' + cx + ',' + (corner + (cy < corner ? -9 : 9)) + ' l9,0 l0,' + (cy < corner ? 9 : -9) + '" stroke="' + PAPER + '" stroke-width="1.4"/>') +
       '<path d="M' + cx + ',' + (cy + 20) + ' A20,20 0 ' + (d.angle > 180 ? 1 : 0) + ' 0 ' + (cx + 20 * Math.sin(rad(d.angle))).toFixed(1) + ',' + (cy + 20 * Math.cos(rad(d.angle))).toFixed(1) + '" stroke="' + YEL + '" stroke-width="2"/></g>';
 
-    s += '<rect x="-18" y="255" width="378" height="75" fill="#0b3b2a"/><rect x="-18" y="255" width="378" height="12" fill="url(#lim-grass)"/>';
+    s += '<rect x="-18" y="255" width="' + VIEW + '" height="75" fill="#0b3b2a"/><rect x="-18" y="255" width="' + VIEW + '" height="12" fill="url(#lim-grass)"/>';
     s += sky(T) + girl() + carrier(cy) + target(tx, ty, air);
     s += '<g class="lim-arrows" fill="' + PAPER + '" opacity=".9"><path d="M-12,' + (cy - 3) + ' l5,-8 l5,8 z"/><path d="M-12,' + (cy + 3) + ' l5,8 l5,-8 z"/></g>';
 
@@ -171,7 +176,7 @@
     if (state.air !== 'clear') {
       const top = state.air === 'fog' ? .78 : .3;
       s += '<linearGradient id="lim-veil" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9e6f4" stop-opacity="' + (top * .12).toFixed(2) + '"/><stop offset="1" stop-color="#e9e6f4" stop-opacity="' + top + '"/></linearGradient>' +
-        '<rect x="-18" y="96" width="378" height="165" fill="url(#lim-veil)" pointer-events="none"/>';
+        '<rect x="-18" y="96" width="' + VIEW + '" height="165" fill="url(#lim-veil)" pointer-events="none"/>';
     }
 
     // the labels that change while you drag; a label that would land on another one is left out
@@ -180,14 +185,14 @@
     const put = (text, x, y, o) => {
       const size = o.size || 13, w = text.length * size * .55 + 8, left = o.anchor === 'middle' ? x - w / 2 : o.anchor === 'end' ? x - w : x - 4;
       const box = o.box || [left, y - size, w, size + 5];
-      if (!o.force && (box[0] < -16 || box[0] + box[2] > 358 || box[1] < 96 || box[1] + box[3] > GROUND + 2 ||
+      if (!o.force && (box[0] < -16 || box[0] + box[2] > RIGHT - 2 || box[1] < 96 || box[1] + box[3] > GROUND + 2 ||
           taken.some((t) => box[0] < t[0] + t[2] && box[0] + box[2] > t[0] && box[1] < t[1] + t[3] && box[1] + box[3] > t[1]))) return false;
       taken.push(box);
       s += '<text x="' + x.toFixed(0) + '" y="' + y.toFixed(0) + '" fill="' + o.fill + '" font-size="' + size + '"' + (o.cls ? ' class="' + o.cls + '"' : '') + (o.anchor ? ' text-anchor="' + o.anchor + '"' : '') + (o.turn ? ' transform="' + o.turn + '"' : '') + '>' + esc(text) + '</text>';
       return true;
     };
     s += '<g class="lim-t">';
-    const bx = Math.min(tx + 22, 314), by = Math.max(ty - (air ? 16 : 36), 112), pxText = fill(T.scene.px, num(d.px));
+    const bx = Math.min(tx + 22, 314 + MORE), by = Math.max(ty - (air ? 16 : 36), 112), pxText = fill(T.scene.px, num(d.px));
     s += '<rect x="' + (bx - 4) + '" y="' + (by - 13) + '" width="46" height="18" rx="9" fill="' + INK + '" fill-opacity=".8" stroke="' + zone(d.px) + '" stroke-width="1.4"/>';
     put(pxText, bx + 19, by, { fill: zone(d.px), size: 12, anchor: 'middle', force: true, box: [bx - 4, by - 13, 46, 18] });
     const hText = fill(T.scene.h, Math.round(state.h));
@@ -204,8 +209,8 @@
     spot(mid(r[0], r[1]), .88, .47, air ? T.scene.shedAir : T.scene.shed);
     spot(Math.min(mid(r[1], r[2]), r[1] + 70), .97, .24, T.scene.dot);
     const edgeX = cx + Math.sqrt(Math.max(0, r[2] * r[2] - (cy - 110) * (cy - 110)));
-    if (edgeX < 250) put(T.scene.johnson, edgeX + 8, 114, { fill: '#ff9bd8', size: 11.5, cls: 'lim-w-rings lim-w-far' });
-    else put(T.scene.johnson + ' →', 352, 114, { fill: '#ff9bd8', size: 11.5, anchor: 'end', cls: 'lim-w-rings lim-w-far' });
+    if (edgeX < 250 + MORE) put(T.scene.johnson, edgeX + 8, 114, { fill: '#ff9bd8', size: 11.5, cls: 'lim-w-rings lim-w-far' });
+    else put(T.scene.johnson + ' →', 352 + MORE, 114, { fill: '#ff9bd8', size: 11.5, anchor: 'end', cls: 'lim-w-rings lim-w-far' });
     s += '</g>';
 
     art.innerHTML = s + '<g class="lim-stickers">' + stickers(T) + '</g>';

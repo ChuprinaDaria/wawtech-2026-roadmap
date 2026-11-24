@@ -30,3 +30,10 @@ the big open-vocabulary model 40, the mask network 0.4, frame differencing 0.05.
 by six for the plain camera. A carrier in flight needs 6 frames per second, a tower needs 2.
 
 The pictures of chapter 02 in the PDF are drawn by this same script: `src/scenes.py` runs `scene.js` in headless Chrome, one state per picture. The layers of the drawing carry class names (`lim-rings`, `lim-frame`, `lim-tri` and others) so that the PDF can dim or hide them.
+
+## A wider picture
+
+The scene is 378 units wide, which fits a phone. `data-view` on the section asks for a wider one, grown to the right:
+`<section class="limits" id="limits" data-view="760">`. The target may then go as far as the picture does, and the sun
+and the cloud move to its right edge. The talk shows the scene this way, as a strip across a slide. Without the
+attribute nothing changes.
